@@ -52,7 +52,7 @@ public class DaumWebtoonCrawlerTest {
         for(DaumWebtoonInfo d : webtoonInfos){
             System.out.println("title : " + d.getTitle());
             System.out.println("nickname : " + d.getNickname());
-            System.out.println("introduction : " + d.getIntroduction());
+            System.out.println("introduction : " + d.getDescription());
             System.out.println("pcThumbnailImageUrl : "+ d.getPcThumbnailImageUrl());
             System.out.println("author1 : " + d.getAuthor1());
             System.out.println("author2 : " + d.getAuthor2());

@@ -80,7 +80,7 @@ public class AdminController {
     public String regist(
             @RequestParam(name = "title") String title,
             @RequestParam(name = "author") String[] authors,
-	        @RequestParam(name= "day") Long[] days,
+            @RequestParam(name= "day") Long[] days,
             @RequestParam(name= "multicheckbox_genre[]") Long[] genres,
             @RequestParam(name= "multicheckbox_keyword[]") Long[] keywordIds,
             @RequestParam(name = "link") String link,
@@ -171,7 +171,7 @@ public class AdminController {
         return "redirect:/main";
     }
 
-//    @PostMapping("/regist/daum")
+    //    @PostMapping("/regist/daum")
 //    public String registDaumWebtoon(@RequestBody LoadWebtoonLink loadWebtoonLink){
 //        //http://webtoon.daum.net/data/pc/webtoon/view/homemaker
 //        RestTemplate restTemplate = new RestTemplate();
@@ -264,7 +264,7 @@ public class AdminController {
         // 원본 이미지의 너비와 높이 입니다. 
         int ow = srcImg.getWidth();
         int oh = srcImg.getHeight();
-       // 원본 너비를 기준으로 하여 썸네일의 비율로 높이를 계산합니다.
+        // 원본 너비를 기준으로 하여 썸네일의 비율로 높이를 계산합니다.
         int nw = ow;
         int nh = (ow * dh)/dw;
         // 계산된 높이가 원본보다 높다면 crop이 안되므로 /
@@ -283,6 +283,7 @@ public class AdminController {
         ImageIO.write(destImg, fileExt.toUpperCase(), thumbFile);
     }
 
-
+    @GetMapping("registNewWebtoon")
+    public String newwebtoon() {  return "/admin/registNewWebtoon"; }
 
 }

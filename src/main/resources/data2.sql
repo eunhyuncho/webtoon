@@ -38,7 +38,3 @@ insert into keyword (id, keyword_type, keyword_value, ordering) values (25, 4, '
 insert into keyword (id, keyword_type, keyword_value, ordering) values (26, 4, '학교', 0);
 insert into keyword (id, keyword_type, keyword_value, ordering) values (27, 4, '범죄', 0);
 insert into keyword (id, keyword_type, keyword_value, ordering) values (28, 4, '귀신', 0);
-
-insert into platform (id, platform_name) values (1, 'Naver');
-insert into platform (id, platform_name) values (2, 'Daum');
-insert into platform (id, platform_name) values (3, 'Lezhin');

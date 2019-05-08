@@ -8,6 +8,7 @@ import java.util.List;
 public interface WebtoonService {
     public List<Webtoon> getWebtoons(List<SearchKeyword> keywords, String searchStr, int page);
     public Webtoon getWebtoonById(Long id);
+    public Webtoon getWebtoonByTitle(String title);
     public List<Webtoon> getBestWebtoons();
     public Webtoon addWebtoon(Webtoon webtoon);
     public void updateWebtoon(Webtoon webtoon);

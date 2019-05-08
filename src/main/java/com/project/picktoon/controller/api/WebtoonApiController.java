@@ -81,6 +81,20 @@ public class WebtoonApiController {
         return new ResponseEntity<>(webtoonDto, HttpStatus.CREATED);
     }
 
+    //웹툰 한개만 가져오기
+    @PostMapping("/registNew")
+    public ResponseEntity<AddNewWebtoonDto> addNewWebtoon(@RequestBody Result result){
+        AddNewWebtoonDto addNewWebtoonDto = new AddNewWebtoonDto();
+        if(webtoonService.getWebtoonByTitle(result.getResult())!=null) {
+            Webtoon webtoon = webtoonService.getWebtoonByTitle(result.getResult());
+            addNewWebtoonDto.setTitle(result.getResult());
+            addNewWebtoonDto.setWebtoonId(webtoon.getId());
+            if (!webtoon.getWebtoonImages().isEmpty())
+                addNewWebtoonDto.setWebtoonImageId(webtoon.getWebtoonImages().get(0).getId());
+        }
+        return new ResponseEntity<>(addNewWebtoonDto, HttpStatus.OK);
+    }
+
     //웹툰 수정하기
     @PutMapping
     public ResponseEntity<Result> updateWebtoon(@Valid @RequestBody WebtoonForm webtoonForm, BindingResult bindingResult){

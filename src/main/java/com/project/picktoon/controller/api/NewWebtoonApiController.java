@@ -3,6 +3,7 @@ package com.project.picktoon.controller.api;
 import com.project.picktoon.domain.NewWebtoon;
 import com.project.picktoon.dto.NewWebtoonDto;
 import com.project.picktoon.service.NewWebtoonService;
+import com.project.picktoon.service.WebtoonService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NewWebtoonApiController {
     private final NewWebtoonService newWebtoonService;
+    private final WebtoonService webtoonService;
     private final ModelMapper modelMapper;
 
     @GetMapping
@@ -38,4 +40,6 @@ public class NewWebtoonApiController {
         newWebtoonService.updateNewWebtoon(updateNewWebtoon.getId(), updateNewWebtoon.getWebtoonId(), updateNewWebtoon.getOrdering());
         return new ResponseEntity(HttpStatus.OK);
     }
+
+
 }

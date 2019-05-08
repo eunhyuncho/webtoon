@@ -13,6 +13,9 @@ public interface WebtoonRepository extends JpaRepository<Webtoon, Long>, Webtoon
     @Query("SELECT w FROM Webtoon w INNER JOIN FETCH w.platform  LEFT JOIN FETCH w.keywords WHERE w.id =:id")
     public Webtoon getWebtoon(@Param("id")Long id);
 
+    @Query("SELECT w FROM Webtoon w WHERE w.title = :title")
+    public Webtoon getWebtoonByTitle(@Param("title")String title);
+
     @Query(value = "SELECT * FROM Webtoon ORDER BY subscription DESC LIMIT 3", nativeQuery = true)
     public List<Webtoon> getBestWebtoons();
 
