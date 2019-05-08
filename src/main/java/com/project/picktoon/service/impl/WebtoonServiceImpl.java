@@ -82,6 +82,14 @@ public class WebtoonServiceImpl implements WebtoonService {
     @Override
     @Transactional(readOnly = true)
     public long getCountByPlatformAndKeyword(String platform, Long keywordId) {
-        return webtoonRepository.getWebtoonIdsByPlatformAndKeyword(platform, keywordId).size();
+        return webtoonRepository.getWebtoonsByPlatformAndKeyword(platform, keywordId).size();
+    }
+
+    @Override
+    @Transactional
+    public void updateWebtoonUpdateState(Long keywordId) {
+        List<Webtoon> webtoons = webtoonRepository.getWebtoonsByKeyword(keywordId);
+        for(Webtoon w : webtoons)
+            webtoonRepository.updateWebtoonUpdateState(w.getId());
     }
 }

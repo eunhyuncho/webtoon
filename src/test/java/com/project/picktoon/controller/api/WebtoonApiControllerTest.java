@@ -79,7 +79,7 @@ public class WebtoonApiControllerTest {
         keywords1.add(keyword1);
         keywords1.add(keyword2);
 
-        Platform platform = Platform.builder().id(1).platformName(PlatformType.naver).build();
+        Platform platform = Platform.builder().id(1).platformName(PlatformType.Naver).build();
 
         WebtoonForm webtoonForm = WebtoonForm.builder()
                                             .title("웹툰 제목")
@@ -133,7 +133,7 @@ public class WebtoonApiControllerTest {
 
     @Test
     public void 웹툰_조회() throws Exception{
-        Platform platform = Platform.builder().id(1).platformName(PlatformType.naver).build();
+        Platform platform = Platform.builder().id(1).platformName(PlatformType.Naver).build();
         Keyword keyword1 = Keyword.builder().id(1L).keywordType(1)
                 .keywordValue("월").ordering(1).build();
         Keyword keyword2 = Keyword.builder().id(3L).keywordType(1)

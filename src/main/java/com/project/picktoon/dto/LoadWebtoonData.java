@@ -16,15 +16,20 @@ public class LoadWebtoonData {
     private String updatedDate;
     private String count;
     private String imgUrl;
+    private List<Long> genreIds;
+    private List<Long> keywordIds;
 
     public LoadWebtoonData(){
         authors = new ArrayList<>();
+        genreIds = new ArrayList<>();
+        keywordIds = new ArrayList<>();
     }
 
     public void addAuthor(String author){
         authors.add(author);
     }
-
+    public void addGenre(Long id) { genreIds.add(id); }
+    public void addKeyword(Long id) { keywordIds.add(id); }
 
     @Override
     public String toString() {

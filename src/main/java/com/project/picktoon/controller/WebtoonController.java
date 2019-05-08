@@ -30,24 +30,6 @@ public class WebtoonController {
     public String webtoonDetails() { return "webtoons/details";}
 
 
-//    @RequestMapping("/images/{webtoonId}")
-//    public void downloadBoardFile(@RequestParam int index, @PathVariable("webtoonId") long webtoonId, HttpServletResponse response) throws Exception{
-//        BoardFileDto boardFile = boardService.selectBoardFileInformation(idx, boardIdx);
-//        if(ObjectUtils.isEmpty(boardFile) == false) {
-//            String fileName = boardFile.getOriginalFileName();
-//
-//            byte[] files = FileUtils.readFileToByteArray(new File(boardFile.getStoredFilePath()));
-//
-//            response.setContentType("application/octet-stream");
-//            response.setContentLength(files.length);
-//            response.setHeader("Content-Disposition", "attachment; fileName=\"" + URLEncoder.encode(fileName,"UTF-8")+"\";");
-//            response.setHeader("Content-Transfer-Encoding", "binary");
-//
-//            response.getOutputStream().write(files);
-//            response.getOutputStream().flush();
-//            response.getOutputStream().close();
-//        }
-//    }
     @GetMapping("/images/{id}")
     @ResponseBody // 컨트롤러안에서 직접 response를 이용하여 결과를 출력할 때 사용
     public void downloadImage(

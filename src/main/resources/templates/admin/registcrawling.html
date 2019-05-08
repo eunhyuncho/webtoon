@@ -14,10 +14,12 @@
             margin: auto;
         }
         .webtoon-load{
-            margin: auto;
+            margin: 10px;
+            padding: 10px;
+            border: #D7F3FA 1px solid;
         }
-        #webtoon-link{
-            width: 200px;
+        #link-submit{
+            margin : 10px 15px;
         }
     </style>
 
@@ -28,7 +30,14 @@
         <div class="card-header bg-info text-center text-white"><h2>웹툰 등록 (크롤링 )</h2></div>
         <!-- 웹툰 url -->
         <div class="webtoon-load">
-            웹툰 주소 : <input type="text" name="webtoon-link" id="webtoon-link">
+            <div class="row">
+                <div class="col-md-8"><label for="webtoon-link">웹툰 주소 : </label><input type="text" name="webtoon-link" id="webtoon-link" class="form-control"></br></div>
+                <div class="col-md-4"><label for="platform">플랫폼 : </label>
+                    <select class="form-control" id="platform2" name="platform">
+                        <option th:each="platform : ${platforms}" th:value="${platform.id}" th:text="${platform.platformName}"></option>
+                    </select></div>
+            </div>
+
             <button id="link-submit" class="btn btn-primary" >웹툰 정보 로딩</button>
             <p style="display: none; color: #ff1616; font-size: 12px" id="load-error">로딩에 실패했습니다.</p>
         </div>
@@ -56,13 +65,13 @@
             </div>
             <div class="form-group">
                 <label>장르</label>
-                <select name="multicheckbox_genre[]" multiple="multiple" class="4colactive">
+                <select name="multicheckbox_genre[]" multiple="multiple" class="4colactive" id="genres">
                     <option th:each="genre : ${genres}" th:value="${genre.getId()}" th:text="${genre.getKeywordValue()}"></option>
                 </select>
             </div>
             <div class="form-group">
                 <label>키워드</label>
-                <select name="multicheckbox_keyword[]" multiple="multiple" class="4colactive">
+                <select name="multicheckbox_keyword[]" multiple="multiple" class="4colactive" id="keywords">
                     <option th:each="keyword : ${keywords}" th:value="${keyword.getId()}" th:text="${keyword.getKeywordValue()}"></option>
                 </select>
             </div>
@@ -75,7 +84,7 @@
                 <input type="text" class="form-control" id="count" name="count" placeholder="ex) 32화">
             </div>
             <div class="form-group">
-                <label for="count">업데이트 날짜</label>
+                <label for="updatedDate">업데이트 날짜</label>
                 <input type="text" class="form-control" id="updatedDate" name="updatedDate" placeholder="ex) 2019.04.30">
             </div>
             <div class="form-group">
@@ -85,6 +94,14 @@
                     <option value="1">12세관람가</option>
                     <option value="2">15세관람가</option>
                     <option value="3">19세관람가</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="state">상태</label>
+                <select class="form-control" id="state" name="state">
+                    <option value="연재중">연재중</option>
+                    <option value="완결">완결</option>
+                    <option value="휴재">휴재</option>
                 </select>
             </div>
             <div class="form-group">
@@ -100,10 +117,9 @@
             <div class="form-group">
                 <label for="image1">image1 (썸네일 이미지) : </label><input type="file" name="image" id="image1">
             </div>
-
-            <div class="form-group">
-                <label for="image2">image2 (상세보기 이미지 ): </label><input type="file" name="image" id="image2">
-            </div>
+            <!--<div class="form-group">-->
+                <!--<label for="image2">image2 (상세보기 이미지 ): </label><input type="file" name="image" id="image2">-->
+            <!--</div>-->
 
             <input type="hidden" id="imgurl" name="imgurl">
 
@@ -113,7 +129,7 @@
                     th:value="${_csrf.token}" />
             <br>
 
-            <button type="submit" class="btn btn-info text-white" style="margin: 0 auto;">웹툰등록</button>
+            <button type="submit" class="btn btn-info text-white" style="margin: 0 auto;" id="submit-button">웹툰등록</button>
         </form>
     </div>
 </div>
@@ -125,11 +141,15 @@
 
     $('#link-submit').click(function(){
         ///regist/loadwebtoon
+        var platformNames = ["naver","daum","lezhin"];
         var link = $("#webtoon-link").val();
+        var platformIdx = $("#platform2 option:selected").val();
+        console.log("플랫폼넘버" + platformIdx);
+
         console.log(link)
         var JSONObject = {'link' : link};
         $.ajax({
-            url: '/api/admin/loadwebtoon',
+            url: '/api/admin/loadwebtoon/' + platformNames[platformIdx - 1],
             method: 'post',
             data: JSON.stringify(JSONObject),
             async: true,
@@ -148,6 +168,18 @@
                     if(data.authors.length > 1){
                         $("#author2").val(data.authors[1]);
                     }
+                    if(data.genreIds.length > 0){
+                        for(var i = 0; i < data.genreIds.length ; i++){
+                            var genreId = data.genreIds[i];
+                            console.log("genreId : "+genreId );
+                            $("#genres").val(data.genreIds[i]).prop("selected",true);
+                        }
+                       // $("#genres").multiselect("select", data.genreIds);
+                        $("#genres").multiselect("refresh");
+                    }
+                    $('select[multiple]').multiselect('reload');
+                    $('#platform').val(platformIdx).prop("selected", true);
+                    $('#platform').attr('disabled', 'disabled');
                 }
             },
             error: function (err) {
@@ -156,6 +188,16 @@
 
         })
     });
+
+
+    // submit발생시 disabled된 selectbox 값은 requestform으로 전달되지 않아
+
+    // 버튼 클릭시 해당 컨트롤의 disabled 속성을 제거하도록 함.
+
+    $('#submit-button').click(function(){
+        $('#platform').removeAttr('disabled');
+    });
+
 </script>
 </body>
 </html>

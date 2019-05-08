@@ -34,7 +34,6 @@
     var decodeURI = decodeURI(document.location.href);
     // 파라미터 가져오기..
     var params = decodeURI.split("?");
-
     $.ajax({
         url: '/api/mywebtoons?'+params[1],
         method: 'get',
@@ -42,9 +41,9 @@
         contentType: "application/json",
         success: function (resp) {
             console.log("마이 웹툰 조회 성공");
-
             for(var i = 0; i < resp.length; i++) {
                 var webtoonRow = $('<li class="result-row mywebtoon-row">' +
+<<<<<<< HEAD
                     '<img src= "/webtoons/images/'+resp[i].webtoonImageId +'" alt="이미지" class="webtoon_image">' +
                     '<div class="webtoon-detail">' +
                     '<p class="webtoon-title"><b><a href = "/webtoons/'+resp[i].webtoonId+'">'+resp[i].webtoonTitle+'</a></b></p>'+
@@ -53,6 +52,17 @@
                     '</div>'+
                     '<img src="/icon/'+alarmcheck(resp[i].alarm)+'" alt="알람" class="alarm">'+
                     '</li>');
+=======
+
+                '<img src= "/webtoons/images/'+resp[i].webtoonImageId +'" alt="이미지" class="webtoon_image">' +
+                '<div class="webtoon-detail">' +
+                '<p class="webtoon-title"><b><a href = "/webtoons/'+resp[i].webtoonId+'">'+resp[i].webtoonTitle+'</a></b></p>'+
+                '<span class="webtoon-count">'+resp[i].webtoonTotalCount+'</span>'+
+                '<span class="webtoon-date">'+resp[i].webtoonUpdatedDate+'</span>'+
+                '</div>'+
+                '<img src="/icon/'+alarmcheck(resp[i].alarm)+'" alt="알람" class="alarm">'+
+                '</li>');
+>>>>>>> 636c4e8d120ab6c06df1cd0d6a83d817e0234ee7
                 webtoonRow.appendTo($('#result-list'));
                 mywebtoonsIds.push(resp[i].id);
             }
@@ -61,22 +71,20 @@
             console.log(err.toString());
         }
     });
-    
+
     function alarmcheck(alarm) {
         if (alarm == false) {
             return "alarm-clock-off.svg";
         } else {
             return "alarm-clock-on.svg";
         }
-        
-    }
 
+    }
     $(document).on('click','.alarm',function () {
         var element = $(this);
         var index = $('.alarm').index(this);
         var id = mywebtoonsIds[index];
         var JSONObject = {'mywebtoonid': id};
-
         $.ajax({
             url: '/api/mywebtoons',
             method: 'put',
@@ -86,12 +94,10 @@
             success: function (resp) {
                 console.log("알람 변경 성공");
                 var src = $(element).attr('src');
-
                 if (src == "/icon/alarm-clock-off.svg") {
                     $(element).attr('src', '/icon/alarm-clock-on.svg');
                     $('.error').text("알림 설정 완료");
                     $('.error').fadeIn(200).delay(500).fadeOut(200);
-
                 } else {
                     $(element).attr('src', '/icon/alarm-clock-off.svg');
                     $('.error').text("알림 설정 해제");
@@ -102,15 +108,11 @@
                 console.log(err.toString());
             }
         });
-
     });
-
     $('#order-select').change(function () {
         var order = $('#order-select option:selected').val();
         window.location.href = "/webtoons/mywebtoons?ordertype="+order;
     });
-
-
 </script>
 </body>
 </html>

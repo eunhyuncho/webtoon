@@ -23,14 +23,14 @@ public class PlatformApiController {
 
         return new ResponseEntity<>(platform, HttpStatus.OK);
     }
-
-    @PostMapping
-    public ResponseEntity<Platform> addPlatform(@RequestBody String platformName){
-        Platform platform = new Platform();
-        platform.setPlatformName(platformName);
-        platform = platformService.addPlatform(platform);
-        return new ResponseEntity<>(platform, HttpStatus.OK);
-    }
+//
+//    @PostMapping
+//    public ResponseEntity<Platform> addPlatform(@RequestBody String platformName){
+//        Platform platform = new Platform();
+//        platform.setPlatformName(platformName);
+//        platform = platformService.addPlatform(platform);
+//        return new ResponseEntity<>(platform, HttpStatus.OK);
+//    }
 
     @DeleteMapping("/{platformId}")
     public ResponseEntity deletePlatform(@PathVariable("platformId") int id){

@@ -18,6 +18,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,11 +45,12 @@ import java.util.List;
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class AdminApiControllor {
-    public final WebtoonService webtoonService;
-    public final KeywordService keywordService;
-    public final PlatformService platformService;
+    private final WebtoonService webtoonService;
+    private final KeywordService keywordService;
+    private final PlatformService platformService;
+    private final WebDriver driver;
 
-    @PostMapping("/loadwebtoon")
+    @PostMapping("/loadwebtoon/naver")
     public LoadWebtoonData loadWebtoonNaver(@RequestBody LoadWebtoonLink loadWebtoonLink){
         try {
             //웹에서 내용을 가져온다.
@@ -94,9 +98,9 @@ public class AdminApiControllor {
         List<DaumWebtoonInfo> webtoonInfos = daumWebtoonList.getData();
 
         log.info("웹툰 인포 갯수 : " + webtoonInfos.size());
-        log.info("d업데이트 요일 : " + loadWebtoonLink.getUpdateDate());
+        log.info("업데이트 요일 : " + loadWebtoonLink.getUpdateDate());
         // 다음 웹툰 - 연재요일로 저장된 웹툰 갯수를 가져온다.
-        Long countWebtoons = webtoonService.getCountByPlatformAndKeyword(PlatformType.daum , loadWebtoonLink.getUpdateDate());
+        Long countWebtoons = webtoonService.getCountByPlatformAndKeyword(PlatformType.Daum.toString() , loadWebtoonLink.getUpdateDate());
         log.info("저장된 웹툰 갯수 : "+ countWebtoons);
         Result result = new Result();
 
@@ -108,8 +112,11 @@ public class AdminApiControllor {
         int addWebtoonCount = 0;
 
         for(DaumWebtoonInfo webtoonInfo : webtoonInfos){
-            if(webtoonService.getWebtoonByTitleAndPlatform(webtoonInfo.getTitle(),PlatformType.daum) != null)
+            Webtoon existWebtoon = webtoonService.getWebtoonByTitleAndPlatform(webtoonInfo.getTitle(), PlatformType.Daum.toString());
+            if(existWebtoon != null){
+                log.info("겹치는 웹툰 : " + existWebtoon.getTitle());
                 continue;
+            }
 
             log.info("웹툰 정보 저장 시작");
             Webtoon webtoon = new Webtoon();
@@ -126,7 +133,7 @@ public class AdminApiControllor {
 
             webtoon.setTotalCount(webtoonInfo.getCount());
             // 플랫폼
-            webtoon.setPlatform(platformService.getPlatformByPlatformName(PlatformType.daum));
+            webtoon.setPlatform(platformService.getPlatformByPlatformName(PlatformType.Daum.toString()));
 
             // 작가 추가.
             Keyword existAuthor = keywordService.getAuthorByName(webtoonInfo.getAuthor1());
@@ -185,7 +192,7 @@ public class AdminApiControllor {
             }
             webtoon.setKeywords(keywords);
             // 이미지 저장 및 웹툰에 추가.
-            webtoon.addWebtoonImage(saveFileFromUrl(webtoonInfo.getPcThumbnailImageUrl(), webtoonInfo.getTitle(),PlatformType.daum));
+            webtoon.addWebtoonImage(saveFileFromUrl(webtoonInfo.getPcThumbnailImageUrl(), webtoonInfo.getTitle(),PlatformType.Daum.toString()));
             // 웹툰 저장
             webtoonService.addWebtoon(webtoon);
             addWebtoonCount++;
@@ -193,6 +200,76 @@ public class AdminApiControllor {
         result.setResult("저장한 웹툰 갯수 : "+ addWebtoonCount);
         return new ResponseEntity<Result>(result , HttpStatus.OK);
     }
+
+    @PostMapping("loadwebtoon/lezhin")
+    public ResponseEntity<LoadWebtoonData> loadWebtoonLezhin(@RequestBody LoadWebtoonLink loadWebtoonLink){
+
+        driver.get(loadWebtoonLink.getLink());
+        LoadWebtoonData loadWebtoonData = new LoadWebtoonData();
+        String title = driver.findElement(By.className("title")).getText(); //제목
+        List<WebElement> authors = driver.findElement(By.className("artist")).findElements(By.tagName("a")); // 작가
+        String[] genres = driver.findElement(By.className("genre")).getText().substring(4).split("/");  // 장르
+        String description = driver.findElement(By.id("product-synopsis")).getText().substring(3);  // 설명
+        String imageUrl = driver.findElement(By.className("thumbnail")).getAttribute("src");    // 이미지 url
+
+        // 제목
+        loadWebtoonData.setTitle(title);
+        // 작가
+        for(WebElement a : authors)
+            loadWebtoonData.addAuthor(a.getText());
+        // 장르 -- 아이디들을 넘겨준다.
+        for(String g : genres){
+            Keyword existGenre = keywordService.getKeywordByTypeAndValue(KeywordType.KEYWORD_GENRE , g);
+            if(existGenre == null){
+                Keyword newGenre = Keyword.builder().keywordType(KeywordType.KEYWORD_GENRE).keywordValue(g).build();
+                loadWebtoonData.addGenre(keywordService.addKeyword(newGenre).getId());
+            }else{
+                loadWebtoonData.addGenre(existGenre.getId());
+            }
+        }
+        // 설명
+        loadWebtoonData.setDescription(description);
+        // 이미지 주소
+        imageUrl = imageUrl.replaceAll("width=100", "width=200");
+        loadWebtoonData.setImgUrl(imageUrl);
+        log.info("imageUrl : "+imageUrl);
+
+        WebElement element = driver.findElement(By.id("comic-episode-list"));
+        List<WebElement> li  = element.findElements(By.tagName("li"));
+
+        log.info("list 사이즈 : "+ li.size());
+        SimpleDateFormat format = new SimpleDateFormat("yy.MM.dd");
+        Date day = null;
+        Date now = new Date();
+        WebElement lastUpdatedEpisode = li.get(li.size() - 1);
+        // 업데이트 날짜 찾기
+        for(int i = 0; i < li.size() ; i++){
+            WebElement w = li.get(i);
+            String dayStr = w.findElement(By.className("free-date")).getText();
+            try{
+                day = format.parse(dayStr);
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+            if(i!=0 && day.after(now)){
+                lastUpdatedEpisode = li.get(i-1);
+                break;
+            }
+
+        }
+        String updatedDate = lastUpdatedEpisode.findElement(By.className("free-date")).getText();
+        updatedDate = "20" + updatedDate;
+        log.info("updatedDate = "+updatedDate);
+        String count = lastUpdatedEpisode.findElement(By.className("episode-name")).getText();
+
+        loadWebtoonData.setUpdatedDate(updatedDate);
+        loadWebtoonData.setCount(count);
+        loadWebtoonData.setLink(loadWebtoonLink.getLink());
+
+
+        return new ResponseEntity(loadWebtoonData, HttpStatus.OK);
+    }
+
 
     public Date parseDate(String dateStr){
         try{
@@ -234,8 +311,8 @@ public class AdminApiControllor {
         return id;
     }
 
-    // 크롤링한 이미지 저장. -- private으로 수정해야됌..
-    public WebtoonImage saveFileFromUrl(String url, String title, String platform){
+    // 크롤링한 이미지 저장.
+    private WebtoonImage saveFileFromUrl(String url, String title, String platform){
         String dir = "imagefile/webtoon/";
         WebtoonImage webtoonImage = new WebtoonImage();
         Calendar calendar = Calendar.getInstance();

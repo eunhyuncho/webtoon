@@ -41,7 +41,7 @@ public class PlatformApiControllerTest {
 
         Platform platform = Platform.builder()
                 .id(5)
-                .platformName(PlatformType.daum)
+                .platformName(PlatformType.Daum)
                 .build();
 
         Mockito.when(platformService.getPlatformById(5)).thenReturn(platform);

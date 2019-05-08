@@ -43,9 +43,11 @@
                 contentType: "application/json",
                 success: function (data) {
                     console.log(data.result);
+                    alert(data.result);
                 },
                 error: function (err) {
                     console.log(err.toString());
+                    alert(data.result);
                 }
 
             })

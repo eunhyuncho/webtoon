@@ -43,24 +43,6 @@ public class AdminController {
     private final WebtoonImageService webtoonImageService;
     private final WebtoonService webtoonService;
 
-
-
-
-//    @GetMapping("/regist")
-//    public String regist(Model model){
-//        List<Keyword> days = keywordService.getKeywordsByType(KeywordType.KEYWORD_DAY);
-//        List<Keyword> genres = keywordService.getKeywordsByType(KeywordType.KEYWORD_GENRE);
-//        List<Keyword> keywords = keywordService.getKeywordsByType(KeywordType.KEYWORD_KEYWORD);
-//        List<Platform> platforms = platformService.getAllPlatforms();
-//
-//        model.addAttribute("days", days);
-//        model.addAttribute("genres", genres);
-//        model.addAttribute("keywords", keywords);
-//        model.addAttribute("platforms", platforms);
-//
-//        return "admin/regist";
-//    }
-
     @GetMapping("/regist")
     public String regist(Model model){
         List<Keyword> days = keywordService.getKeywordsByType(KeywordType.KEYWORD_DAY);
@@ -80,9 +62,15 @@ public class AdminController {
     public String regist(
             @RequestParam(name = "title") String title,
             @RequestParam(name = "author") String[] authors,
+<<<<<<< HEAD
             @RequestParam(name= "day") Long[] days,
             @RequestParam(name= "multicheckbox_genre[]") Long[] genres,
             @RequestParam(name= "multicheckbox_keyword[]") Long[] keywordIds,
+=======
+	        @RequestParam(name= "day", required = false) Long[] days,
+            @RequestParam(name= "multicheckbox_genre[]" , required = false) Long[] genres,
+            @RequestParam(name= "multicheckbox_keyword[]", required = false) Long[] keywordIds,
+>>>>>>> 636c4e8d120ab6c06df1cd0d6a83d817e0234ee7
             @RequestParam(name = "link") String link,
             @RequestParam(name = "count") String count,
             @RequestParam(name = "seeage") int seeage,
@@ -90,7 +78,8 @@ public class AdminController {
             @RequestParam(name = "description") String description,
             @RequestParam(name = "image") MultipartFile[] images,
             @RequestParam(name = "imgurl", required = false)String imgUrl,
-            @RequestParam(name = "updatedDate")String updatedDateStr
+            @RequestParam(name = "updatedDate")String updatedDateStr,
+            @RequestParam(name = "state")String state
     ){
         Assert.hasText(title, "제목을 입력하세요.");
         Assert.notEmpty(authors, "작가를 입력하세요.");
@@ -99,12 +88,13 @@ public class AdminController {
         Webtoon webtoon = new Webtoon();
         webtoon.setTitle(title);
         webtoon.setLink(link);
-        // 네이버는 링크와 크롤링링크가 같다.
+        // 네이버와 레진은 링크와 크롤링링크가 같다.
         webtoon.setCrawlingLink(link);
         webtoon.setTotalCount(count);
         webtoon.setSeeAge(SeeAge.SEEAGES[seeage]);
         webtoon.setPlatform(platformService.getPlatformById(platform));
         webtoon.setDescription(description);
+        webtoon.setState(state);
 
         List<Keyword> keywords = new ArrayList<>();
 
@@ -152,7 +142,7 @@ public class AdminController {
                 }
             }
         }else{
-            WebtoonImage imageFile = saveFileFromUrl(imgUrl, title, platformService.getPlatformById(platform).getPlatformName());
+            WebtoonImage imageFile = saveFileFromUrl(imgUrl, title, platformService.getPlatformById(platform).getPlatformName().toString());
             imageFile.setName(title);
             imageFile.setMimeType("image/jpeg");
 
@@ -171,6 +161,7 @@ public class AdminController {
         return "redirect:/main";
     }
 
+<<<<<<< HEAD
     //    @PostMapping("/regist/daum")
 //    public String registDaumWebtoon(@RequestBody LoadWebtoonLink loadWebtoonLink){
 //        //http://webtoon.daum.net/data/pc/webtoon/view/homemaker
@@ -181,6 +172,9 @@ public class AdminController {
 //
 //        return "redirect:/main";
 //    }
+=======
+    // 다음 -- 연재 요일 웹툰을 전부 저장한다.
+>>>>>>> 636c4e8d120ab6c06df1cd0d6a83d817e0234ee7
     @GetMapping("/regist/daum")
     public String registDaumWebtoons(Model model){
         List<Keyword> days = keywordService.getKeywordsByType(KeywordType.KEYWORD_DAY);
@@ -216,8 +210,9 @@ public class AdminController {
 
         return dir;
     }
-    // 크롤링한 이미지 저장. -- private으로 수정해야됌..
-    public WebtoonImage saveFileFromUrl(String url, String title, String platform){
+
+    // url로 이미지 저장..
+    private WebtoonImage saveFileFromUrl(String url, String title, String platform){
         String dir = "imagefile/webtoon/";
         WebtoonImage webtoonImage = new WebtoonImage();
         Calendar calendar = Calendar.getInstance();

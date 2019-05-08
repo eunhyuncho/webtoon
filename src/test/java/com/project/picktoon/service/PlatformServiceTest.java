@@ -29,13 +29,13 @@ public class PlatformServiceTest {
         System.out.println(platform);
     }
 
-    @Test
-    public void 플랫폼_플랫폼추가하기(){
-        Platform platform = new Platform();
-        platform.setPlatformName("카카오페이지");
-        platformService.addPlatform(platform);
-        System.out.println(platform);
-    }
+//    @Test
+//    public void 플랫폼_플랫폼추가하기(){
+//        Platform platform = new Platform();
+//        platform.setPlatformName(P);
+//        platformService.addPlatform(platform);
+//        System.out.println(platform);
+//    }
 
     @Test
     public void 플랫폼_플랫폼삭제하기() throws Exception{

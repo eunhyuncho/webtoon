@@ -20,7 +20,8 @@ public class Platform {
     private int id;
 
     @Column(name="platform_name")
-    private String platformName;
+    @Enumerated(EnumType.STRING)
+    private PlatformType platformName;
 }
 
 
