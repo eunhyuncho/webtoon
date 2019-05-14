@@ -59,6 +59,11 @@ public class WebtoonApiController {
     @GetMapping("/bestWebtoons")
     public ResponseEntity<List<WebtoonDto>> getBestWebtoon(){
         List<Webtoon> webtoonlist = webtoonService.getBestWebtoons();
+        return getListWebtoonDto(webtoonlist);
+    }
+
+    //List<WebtoonDto> 만드는 메소드 추출
+    public ResponseEntity<List<WebtoonDto>> getListWebtoonDto(List<Webtoon> webtoonlist) {
         List<WebtoonDto> webtoons = new ArrayList<>();
 
         for (Webtoon webtoon : webtoonlist) {

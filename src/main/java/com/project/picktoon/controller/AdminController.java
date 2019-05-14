@@ -1,5 +1,6 @@
 package com.project.picktoon.controller;
 
+import com.project.picktoon.controller.api.WebtoonApiController;
 import com.project.picktoon.domain.Keyword;
 import com.project.picktoon.domain.Platform;
 import com.project.picktoon.domain.Webtoon;
@@ -41,7 +42,7 @@ public class AdminController {
     private final PlatformService platformService;
     private final WebtoonImageService webtoonImageService;
     private final WebtoonService webtoonService;
-    private final ModelMapper modelMapper;
+    private final WebtoonApiController webtoonApiController;
 
     @GetMapping("/regist")
     public String regist(Model model){
@@ -271,13 +272,7 @@ public class AdminController {
     @GetMapping("/webtoons")
     public ResponseEntity<List<WebtoonDto>> getWebtoonsByPlatform(@RequestParam(name = "platformId") int platformId){
         List<Webtoon> webtoonlist = webtoonService.getWebtoonsByPlatfrom(platformId);
-        List<WebtoonDto> webtoons = new ArrayList<>();
-
-        for (Webtoon webtoon : webtoonlist) {
-            WebtoonDto webtoonDto = modelMapper.map(webtoon, WebtoonDto.class);
-            webtoons.add(webtoonDto);
-        }
-        return new ResponseEntity<>(webtoons, HttpStatus.OK);
+        return webtoonApiController.getListWebtoonDto(webtoonlist);
     }
 
     //관리자웹툰 검색하기 결과
