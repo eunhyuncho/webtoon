@@ -43,16 +43,6 @@
             console.log("마이 웹툰 조회 성공");
             for(var i = 0; i < resp.length; i++) {
                 var webtoonRow = $('<li class="result-row mywebtoon-row">' +
-<<<<<<< HEAD
-                    '<img src= "/webtoons/images/'+resp[i].webtoonImageId +'" alt="이미지" class="webtoon_image">' +
-                    '<div class="webtoon-detail">' +
-                    '<p class="webtoon-title"><b><a href = "/webtoons/'+resp[i].webtoonId+'">'+resp[i].webtoonTitle+'</a></b></p>'+
-                    '<span class="webtoon-count">'+resp[i].webtoonTotalCount+'</span>'+
-                    '<span class="webtoon-date">'+resp[i].webtoonUpdatedDate+'</span>'+
-                    '</div>'+
-                    '<img src="/icon/'+alarmcheck(resp[i].alarm)+'" alt="알람" class="alarm">'+
-                    '</li>');
-=======
 
                 '<img src= "/webtoons/images/'+resp[i].webtoonImageId +'" alt="이미지" class="webtoon_image">' +
                 '<div class="webtoon-detail">' +
@@ -62,7 +52,7 @@
                 '</div>'+
                 '<img src="/icon/'+alarmcheck(resp[i].alarm)+'" alt="알람" class="alarm">'+
                 '</li>');
->>>>>>> 636c4e8d120ab6c06df1cd0d6a83d817e0234ee7
+
                 webtoonRow.appendTo($('#result-list'));
                 mywebtoonsIds.push(resp[i].id);
             }

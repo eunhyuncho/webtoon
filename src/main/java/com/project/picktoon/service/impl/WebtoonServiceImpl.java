@@ -92,4 +92,9 @@ public class WebtoonServiceImpl implements WebtoonService {
         for(Webtoon w : webtoons)
             webtoonRepository.updateWebtoonUpdateState(w.getId());
     }
+
+    @Override
+    public List<Webtoon> getWebtoonsByPlatfrom(int platformId) {
+        return webtoonRepository.getWebtoonsByPlatform(platformId);
+    }
 }

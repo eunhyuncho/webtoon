@@ -1,9 +1,11 @@
 package com.project.picktoon.controller.api;
 
+import com.project.picktoon.domain.Platform;
 import com.project.picktoon.domain.User;
 import com.project.picktoon.domain.Webtoon;
 import com.project.picktoon.dto.*;
 import com.project.picktoon.service.*;
+import com.project.picktoon.util.PlatformType;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -53,15 +55,14 @@ public class WebtoonApiController {
         }
         return new ResponseEntity<>(webtoonDetailDto, HttpStatus.OK);
     }
-
+    //베스트웹툰 가져오기
     @GetMapping("/bestWebtoons")
     public ResponseEntity<List<WebtoonDto>> getBestWebtoon(){
         List<Webtoon> webtoonlist = webtoonService.getBestWebtoons();
         List<WebtoonDto> webtoons = new ArrayList<>();
 
-        for(Webtoon webtoon : webtoonlist){
+        for (Webtoon webtoon : webtoonlist) {
             WebtoonDto webtoonDto = modelMapper.map(webtoon, WebtoonDto.class);
-            //TODO 이미지 추가하고 테스트하기
             webtoons.add(webtoonDto);
         }
         return new ResponseEntity<>(webtoons, HttpStatus.OK);

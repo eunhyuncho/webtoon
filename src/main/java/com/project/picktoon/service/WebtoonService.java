@@ -18,5 +18,6 @@ public interface WebtoonService {
     public Webtoon getWebtoonByTitleAndPlatform(String title, String platform);
     public long getCountByPlatformAndKeyword(String platform, Long keywordId);
     public void updateWebtoonUpdateState(Long keywordId);
+    public List<Webtoon> getWebtoonsByPlatfrom(int platformId);
 
 }

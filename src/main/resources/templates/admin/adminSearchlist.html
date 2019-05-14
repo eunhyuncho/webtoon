@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="/webjars/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/webjars/jquery/3.3.1-2/jquery.min.js"></script>
+    <script src="/js/jquery.multiselect.js"></script>
+    <link href="/js/jquery.multiselect.css" rel="stylesheet" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+
+    <title>Admin SearchWebtoon</title>
+
+    <style>
+        element.style {}
+        h1{
+            font-size : 200%;
+            text-align : center;
+            /*  border : 1px solid red; */
+            margin : 20px;
+            padding : 10px;
+        }
+        .btn-info{
+            margin-left : 10px;
+            margin-right: 10px;
+            padding-bottom: 10px;
+        }
+        .dropdown-toggle{
+            background-color: skyblue;
+            border: none;
+        }
+        .table{
+            width: 95%;
+            margin: auto;
+            text-align: center;
+        }
+        .webtoon_image{
+            height: 50px;
+            width: 65px;
+            float: inherit;
+            padding-top: 10px;
+            margin-right: 12px;
+        }
+        a{
+            color: black;
+        }
+    </style>
+
+</head>
+<body>
+<div class="form-group">
+    <h1> 관리자 웹툰 검색하기 </h1>
+</div>
+<br>
+<br>
+<!--result-->
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th scope="col">번호</th>
+        <th scope="col">이미지</th>
+        <th scope="col">제목</th>
+        <th scope="col">작가</th>
+        <th scope="col">업로드날짜</th>
+        <th scope="col">플랫폼</th>
+    </tr>
+    </thead>
+    <tbody id="admin_webtoonlist">
+        <!--검색결과-->
+    </tbody>
+</table>
+
+<script>
+    //  인코딩된 url --> 다시 한글로 변환
+    var decodeURI = decodeURI(document.location.href);
+    // 파라미터 가져오기..
+    var params = decodeURI.split("?");
+    $.ajax({
+        url: '/api/webtoons/search?' + params[1],
+        method: 'get',
+        async: true,
+        contentType: "application/json",
+        success: function (webtoons) {
+            console.log("웹툰 가져오기 성공");
+            var author="";
+
+            for(var i=0; i<webtoons.length; i++){
+
+                var keywordlist = webtoons[i].keywords;
+                for(var j=0; j<keywordlist.length; j++){
+                    if(keywordlist[j].keywordType==3)
+                        author = keywordlist[j].keywordValue;
+                }
+
+
+                var webtoon = $('<tr><td>'+webtoons[i].id+'</td>'+
+                    //TODO 이미지주소 가져오
+                    '<td><img src= "/webtoons/images/'+webtoons[i].id+'" alt="이미지" class="webtoon_image"></td>'+
+                    '<td><a href="/webtoons/'+webtoons[i].id+'">'+webtoons[i].title+'</a></td>'+
+                    '<td>'+author+'</td>'+
+                    '<td>'+webtoons[i].updatedDate+'</td>'+
+                    '<td>'+webtoons[i].platformName+'</td></tr>'
+                );
+
+                webtoon.appendTo($('#admin_webtoonlist'));
+            }
+        },
+        error: function (err) {
+            console.log(err.toString());
+        }
+    });
+</script>
+</body>
+</html>

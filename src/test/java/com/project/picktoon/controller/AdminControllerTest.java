@@ -1,6 +1,7 @@
 package com.project.picktoon.controller;
 
 import com.project.picktoon.domain.WebtoonImage;
+import com.project.picktoon.util.PlatformType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,8 @@ public class AdminControllerTest {
     @Test
     public void 웹툰_이미지_저장_다음(){
 
-        WebtoonImage webtoonImage = adminController.saveFileFromUrl("http://t1.daumcdn.net/webtoon/op/3a34d4bed55da90bc97236f06cf900cf286d4199", "one", "daum");
-        System.out.println("file name : " + webtoonImage.getSaveFileName());
+       // WebtoonImage webtoonImage = adminController.saveFileFromUrl("http://t1.daumcdn.net/webtoon/op/3a34d4bed55da90bc97236f06cf900cf286d4199", "one", PlatformType.Daum.toString());
+       // System.out.println("file name : " + webtoonImage.getSaveFileName());
     }
 
 

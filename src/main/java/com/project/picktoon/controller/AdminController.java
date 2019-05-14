@@ -4,9 +4,7 @@ import com.project.picktoon.domain.Keyword;
 import com.project.picktoon.domain.Platform;
 import com.project.picktoon.domain.Webtoon;
 import com.project.picktoon.domain.WebtoonImage;
-import com.project.picktoon.dto.DaumWebtoonDto.DaumWebtoonInfo;
-import com.project.picktoon.dto.DaumWebtoonDto.DaumWebtoonList;
-import com.project.picktoon.dto.LoadWebtoonLink;
+import com.project.picktoon.dto.WebtoonDto;
 import com.project.picktoon.service.KeywordService;
 import com.project.picktoon.service.PlatformService;
 import com.project.picktoon.service.WebtoonImageService;
@@ -16,12 +14,13 @@ import com.project.picktoon.util.SeeAge;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.imgscalr.Scalr;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
@@ -42,6 +41,7 @@ public class AdminController {
     private final PlatformService platformService;
     private final WebtoonImageService webtoonImageService;
     private final WebtoonService webtoonService;
+    private final ModelMapper modelMapper;
 
     @GetMapping("/regist")
     public String regist(Model model){
@@ -62,15 +62,9 @@ public class AdminController {
     public String regist(
             @RequestParam(name = "title") String title,
             @RequestParam(name = "author") String[] authors,
-<<<<<<< HEAD
-            @RequestParam(name= "day") Long[] days,
-            @RequestParam(name= "multicheckbox_genre[]") Long[] genres,
-            @RequestParam(name= "multicheckbox_keyword[]") Long[] keywordIds,
-=======
-	        @RequestParam(name= "day", required = false) Long[] days,
+            @RequestParam(name= "day", required = false) Long[] days,
             @RequestParam(name= "multicheckbox_genre[]" , required = false) Long[] genres,
             @RequestParam(name= "multicheckbox_keyword[]", required = false) Long[] keywordIds,
->>>>>>> 636c4e8d120ab6c06df1cd0d6a83d817e0234ee7
             @RequestParam(name = "link") String link,
             @RequestParam(name = "count") String count,
             @RequestParam(name = "seeage") int seeage,
@@ -161,20 +155,7 @@ public class AdminController {
         return "redirect:/main";
     }
 
-<<<<<<< HEAD
-    //    @PostMapping("/regist/daum")
-//    public String registDaumWebtoon(@RequestBody LoadWebtoonLink loadWebtoonLink){
-//        //http://webtoon.daum.net/data/pc/webtoon/view/homemaker
-//        RestTemplate restTemplate = new RestTemplate();
-//        DaumWebtoonList result = restTemplate.getForObject(loadWebtoonLink.getLink() , DaumWebtoonList.class);
-//        log.info("size : "+result.getData().size());
-//        List<DaumWebtoonInfo> webtoonInfos = result.getData();
-//
-//        return "redirect:/main";
-//    }
-=======
     // 다음 -- 연재 요일 웹툰을 전부 저장한다.
->>>>>>> 636c4e8d120ab6c06df1cd0d6a83d817e0234ee7
     @GetMapping("/regist/daum")
     public String registDaumWebtoons(Model model){
         List<Keyword> days = keywordService.getKeywordsByType(KeywordType.KEYWORD_DAY);
@@ -278,7 +259,28 @@ public class AdminController {
         ImageIO.write(destImg, fileExt.toUpperCase(), thumbFile);
     }
 
-    @GetMapping("registNewWebtoon")
-    public String newwebtoon() {  return "/admin/registNewWebtoon"; }
+    @GetMapping("/search")
+    public String adminListwebtoon(Model model) {
+            List<Platform> platforms = platformService.getAllPlatforms();
+            model.addAttribute("platforms", platforms);
+        return "admin/adminSearch";
+    }
 
+    //플랫폼으로 웹툰 가져오기
+    //TODO url 다시 정하기
+    @GetMapping("/webtoons")
+    public ResponseEntity<List<WebtoonDto>> getWebtoonsByPlatform(@RequestParam(name = "platformId") int platformId){
+        List<Webtoon> webtoonlist = webtoonService.getWebtoonsByPlatfrom(platformId);
+        List<WebtoonDto> webtoons = new ArrayList<>();
+
+        for (Webtoon webtoon : webtoonlist) {
+            WebtoonDto webtoonDto = modelMapper.map(webtoon, WebtoonDto.class);
+            webtoons.add(webtoonDto);
+        }
+        return new ResponseEntity<>(webtoons, HttpStatus.OK);
+    }
+
+    //관리자웹툰 검색하기 결과
+    @GetMapping("/searchlist")
+    public String searchWebtoon() { return "admin/adminSearchlist";}
 }
