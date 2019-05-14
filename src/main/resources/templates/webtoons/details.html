@@ -76,7 +76,9 @@
         <h3>키워드</h3>
     </div>
     <div style="flex-grow: 1" class="details-author">
-        <div class="h3-p" id="webtoon-keywords"><!--키워드--></div>
+        <div class="h3-p" id="webtoon-keywords">
+            <!--키워드-->
+        </div>
     </div>
 </section>
 <hr>
@@ -108,7 +110,6 @@
         success: function (webtoondetail) {
             console.log("검색 성공");
             console.log("UserId: " + webtoondetail.userId);
-            // console.log(webtoondetail.mywebtoonId);
             myWebtoonId = webtoondetail.mywebtoonId;
 
                 var author = new Array();
@@ -148,9 +149,8 @@
             $("#webtoon-platform").append(webtoondetail.platformName);
 
             for(var i = 0; i < genre.length; i++) {
-                    if(i>0) $("#webtoon-genre").append(" ");
-                //     else $("#webtoon-genre").append(" "+ keyword(4)[i]);
-                $("#webtoon-genre").append("#"+ genre[i]);
+                    // if(i>0) $("#webtoon-genre").append(" ");
+                $("#webtoon-genre").append('<button class="badge badge-pill badge-secondary badge-search" onclick="location.href=\'search?key2='+genre[i]+'\'">'+genre[i]+'</button>');
             }
 
             for(var i = 0; i < days.length; i++) {
@@ -159,9 +159,8 @@
             }
 
             for(var i = 0; i < keywords.length; i++) {
-                if(i>0) $("#webtoon-keywords").append(" ");
-                //     else $("#webtoon-genre").append(" "+ keyword(2)[i]);
-                $("#webtoon-keywords").append("#"+ keywords[i]);
+                // if(i>0) $("#webtoon-keywords").append(" ");
+                $("#webtoon-keywords").append('<button class="badge badge-pill badge-secondary badge-search" onclick="location.href=\'search?key4='+keywords[i]+'\'">'+keywords[i]+'</button>');
             }
 
             $("#webtoon-totalCount").append(webtoondetail.totalCount);
@@ -248,7 +247,6 @@
             }
         });
     }
-
 </script>
 
 </body>
