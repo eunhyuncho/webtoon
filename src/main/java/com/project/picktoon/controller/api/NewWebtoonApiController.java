@@ -26,13 +26,13 @@ public class NewWebtoonApiController {
         List<NewWebtoon> newWebtoonlist = newWebtoonService.getNewWebtoons();
         List<NewWebtoonDto> newWebtoons = new ArrayList<>();
 
-            for(NewWebtoon newWebtoon : newWebtoonlist){
-                NewWebtoonDto newWebtoonDto = modelMapper.map(newWebtoon, NewWebtoonDto.class);
+        for(NewWebtoon newWebtoon : newWebtoonlist){
+            NewWebtoonDto newWebtoonDto = modelMapper.map(newWebtoon, NewWebtoonDto.class);
 
-                if(!newWebtoon.getWebtoon().getWebtoonImages().isEmpty())
-                    newWebtoonDto.setWebtoonImageId(newWebtoon.getWebtoon().getWebtoonImages().get(0).getId());
-                newWebtoons.add(newWebtoonDto);
-            }
+            if(!newWebtoon.getWebtoon().getWebtoonImages().isEmpty())
+                newWebtoonDto.setWebtoonImageId(newWebtoon.getWebtoon().getWebtoonImages().get(0).getId());
+            newWebtoons.add(newWebtoonDto);
+        }
         return new ResponseEntity<>(newWebtoons, HttpStatus.OK);
     }
 

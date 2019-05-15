@@ -100,7 +100,7 @@ public class AdminApiControllor {
         log.info("웹툰 인포 갯수 : " + webtoonInfos.size());
         log.info("업데이트 요일 : " + loadWebtoonLink.getUpdateDate());
         // 다음 웹툰 - 연재요일로 저장된 웹툰 갯수를 가져온다.
-        Long countWebtoons = webtoonService.getCountByPlatformAndKeyword(PlatformType.Daum.toString() , loadWebtoonLink.getUpdateDate());
+        Long countWebtoons = webtoonService.getCountByPlatformAndKeyword(PlatformType.Daum , loadWebtoonLink.getUpdateDate());
         log.info("저장된 웹툰 갯수 : "+ countWebtoons);
         Result result = new Result();
 
@@ -112,7 +112,7 @@ public class AdminApiControllor {
         int addWebtoonCount = 0;
 
         for(DaumWebtoonInfo webtoonInfo : webtoonInfos){
-            Webtoon existWebtoon = webtoonService.getWebtoonByTitleAndPlatform(webtoonInfo.getTitle(), PlatformType.Daum.toString());
+            Webtoon existWebtoon = webtoonService.getWebtoonByTitleAndPlatform(webtoonInfo.getTitle(), PlatformType.Daum);
             if(existWebtoon != null){
                 log.info("겹치는 웹툰 : " + existWebtoon.getTitle());
                 continue;

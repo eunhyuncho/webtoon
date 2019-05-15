@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.lang.reflect.Type;
+import java.nio.file.AccessDeniedException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -89,16 +90,23 @@ public class WebtoonApiController {
 
     //웹툰 한개만 가져오기
     @PostMapping("/registNew")
-    public ResponseEntity<AddNewWebtoonDto> addNewWebtoon(@RequestBody Result result){
-        AddNewWebtoonDto addNewWebtoonDto = new AddNewWebtoonDto();
-        if(webtoonService.getWebtoonByTitle(result.getResult())!=null) {
-            Webtoon webtoon = webtoonService.getWebtoonByTitle(result.getResult());
-            addNewWebtoonDto.setTitle(result.getResult());
-            addNewWebtoonDto.setWebtoonId(webtoon.getId());
+    public ResponseEntity<NewWebtoonDto> addNewWebtoon(@RequestBody AddNewWebtoonDto addNewWebtoonDto){
+        NewWebtoonDto newWebtoonDto = new NewWebtoonDto();
+
+        if(webtoonService.getWebtoonByTitle(addNewWebtoonDto.getWebtoonTitle())!=null) {
+            Webtoon webtoon = webtoonService.getWebtoonByTitle(addNewWebtoonDto.getWebtoonTitle());
+            newWebtoonDto.setWebtoonTitle(addNewWebtoonDto.getWebtoonTitle()); //웹툰제목
+            newWebtoonDto.setWebtoonId(webtoon.getId()); //웹툰아이디
+            newWebtoonDto.setId(addNewWebtoonDto.getId());//아이디
+            newWebtoonDto.setOrdering(addNewWebtoonDto.getOrdering());//ordering
             if (!webtoon.getWebtoonImages().isEmpty())
-                addNewWebtoonDto.setWebtoonImageId(webtoon.getWebtoonImages().get(0).getId());
+                newWebtoonDto.setWebtoonImageId(webtoon.getWebtoonImages().get(0).getId()); //웹툰이미지
         }
-        return new ResponseEntity<>(addNewWebtoonDto, HttpStatus.OK);
+        //TODO 값이 없을 떄 오류처리 해주기
+//        else{
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        }
+        return new ResponseEntity<>(newWebtoonDto, HttpStatus.OK);
     }
 
     //웹툰 수정하기
@@ -129,11 +137,11 @@ public class WebtoonApiController {
     //웹툰 검색
     @GetMapping("/search")
     public ResponseEntity<List<SearchWebtoonDto>> searchWebtoons(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
-                                           @RequestParam(name = "key1", required = false) String[] keywords1,
-                                           @RequestParam(name = "key2", required = false) String[] keywords2,
-                                           @RequestParam(name = "key3", required = false) String[] keywords3,
-                                           @RequestParam(name = "key4", required = false) String[] keywords4,
-                                           @RequestParam(name = "searchStr", required = false) String searchStr){
+                                                                 @RequestParam(name = "key1", required = false) String[] keywords1,
+                                                                 @RequestParam(name = "key2", required = false) String[] keywords2,
+                                                                 @RequestParam(name = "key3", required = false) String[] keywords3,
+                                                                 @RequestParam(name = "key4", required = false) String[] keywords4,
+                                                                 @RequestParam(name = "searchStr", required = false) String searchStr){
         List<SearchKeyword> searchKeywords = new ArrayList<>();
 
         if(keywords1 != null)

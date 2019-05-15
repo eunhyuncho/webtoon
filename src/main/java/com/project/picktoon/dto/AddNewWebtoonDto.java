@@ -4,14 +4,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Getter
 @Setter
 public class AddNewWebtoonDto {
     @NotNull
-    private String title;
+    private int id;
+    private int ordering;
     @NotNull
-    private Long webtoonId;
-    @NotNull
-    private Long webtoonImageId = -1L;
+    @Size(min=1, max=45)
+    private String webtoonTitle;
 }

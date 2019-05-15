@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -17,7 +18,6 @@
             width : 100%;
             text-align: center;
             /*  border : 1px solid black; */
-
         }
         img{
             /*            text-decoration: none;*/
@@ -25,7 +25,6 @@
             width: 80px;
             height: 80px;
         }
-
         h1{
             font-size : 150%;
             text-align : center;
@@ -33,7 +32,6 @@
             margin : 10px;
             padding : 10px;
         }
-
         h3{
             font-size : 130%;
             text-align : center;
@@ -99,46 +97,50 @@
             <h1>새 웹툰 추가하기 : </h1>
             <input type="text" name="link1" id="link1" placeholder="NEW WEBTOON1">
             <button id="submit1" class="btn btn-info text-white btn-preview" style="margin: 0 auto;" onclick="submit(1);">확인</button>
-            <button id="cnacel1" class="btn text-white btn-cancle" style="margin: 0 auto;" onclick="clearForm(this.form);">취소</button>
+            <button id="cnacel1" class="btn text-white btn-cancle" style="margin: 0 auto;" onclick="window.location.reload();">취소</button>
         </div>
         <div class="form-group">
             <input type="text" name="link2" id="link2" placeholder="NEW WEBTOON2">
             <button id="submit2" class="btn btn-info text-white btn-preview" style="margin: 0 auto;" onclick="submit(2);">확인</button>
-            <button id="cnacel2" class="btn text-white btn-cancle" style="margin: 0 auto;" onclick="clearForm(this.form);">취소</button>
+            <button id="cnacel2" class="btn text-white btn-cancle" style="margin: 0 auto;" onclick="window.location.reload();">취소</button>
         </div>
         <div class="form-group">
             <input type="text" name="link3" id="link3" placeholder="NEW WEBTOON3">
             <button id="submit3" class="btn btn-info text-white btn-preview" style="margin: 0 auto;" onclick="submit(3);">확인</button>
-            <button id="cancle3" class="btn text-white btn-cancle" style="margin: 0 auto;" onclick="clearForm(this.form);">취소</button>
+            <button id="cancle3" class="btn text-white btn-cancle" style="margin: 0 auto;" onclick="window.location.reload();">취소</button>
         </div>
     </div>
 </div>
 
-    <section class="new_webtoons">
-        <h3 id="new_webtoon">NEW WEBTOONS</h3>
-        <ol class="row">
-            <li>
-                <div class="aspect_1_1">
-                    <div class="img1" id="newWebtoon1"><!--이미지--></div>
-                </div>
-                <p id="newWebtoon1-title"><!--title--></p>
-            </li>
-            <li>
-                <div class="aspect_1_1">
-                    <div class="img1" id="newWebtoon2"><!--이미지--></div>
-                </div>
-                <p id="newWebtoon2-title"><!--title--></p>
-            </li>
-            <li>
-                <div class="aspect_1_1">
-                    <div class="img1" id="newWebtoon3"><!--이미지--></div>
-                </div>
-                <p id="newWebtoon3-title"><!--title--></p>
-            </li>
-        </ol>
-    </section>
+<section class="new_webtoons">
+    <h3 id="new_webtoon">NEW WEBTOONS</h3>
+    <ol class="row">
+        <li>
+            <div class="aspect_1_1">
+                <div class="img1" id="newWebtoon1"><!--이미지--></div>
+            </div>
+            <p id="newWebtoon1-title"><!--title--></p>
+        </li>
+        <li>
+            <div class="aspect_1_1">
+                <div class="img1" id="newWebtoon2"><!--이미지--></div>
+            </div>
+            <p id="newWebtoon2-title"><!--title--></p>
+        </li>
+        <li>
+            <div class="aspect_1_1">
+                <div class="img1" id="newWebtoon3"><!--이미지--></div>
+            </div>
+            <p id="newWebtoon3-title"><!--title--></p>
+        </li>
+    </ol>
+</section>
 
 <script>
+    var webtoonId;
+    var title;
+    var webtoonImageId;
+
     $.ajax({
         url: '/api/newwebtoons',
         method: 'get',
@@ -146,25 +148,29 @@
         contentType: "application/json",
         success: function (newWebtoon) {
             console.log("새웹툰 불러오기 성공");
-            console.log(newWebtoon);
 
-            // $("#newWebtoon1").append('<img src="/webtoons/images/'+newWebtoon[0].webtoonImageId+'">');
-            // $("#newWebtoon2").append('<img src="/webtoons/images/'+newWebtoon[1].webtoonImageId+'">');
-            // $("#newWebtoon3").append('<img src="/webtoons/images/'+newWebtoon[2].webtoonImageId+'">');
-            // $("#newWebtoon1-title").append(newWebtoon[0].webtoonTitle);
-            // $("#newWebtoon2-title").append(newWebtoon[1].webtoonTitle);
-            // $("#newWebtoon3-title").append(newWebtoon[2].webtoonTitle);
+            if(newWebtoon.length===0){
+                console.log("newWebtoon없음");
+            }
+            else {
+                $("#newWebtoon1").append('<img src="/webtoons/images/' + newWebtoon[0].webtoonImageId + '">');
+                $("#newWebtoon2").append('<img src="/webtoons/images/' + newWebtoon[1].webtoonImageId + '">');
+                $("#newWebtoon3").append('<img src="/webtoons/images/' + newWebtoon[2].webtoonImageId + '">');
+                $("#newWebtoon1-title").append(newWebtoon[0].webtoonTitle);
+                $("#newWebtoon2-title").append(newWebtoon[1].webtoonTitle);
+                $("#newWebtoon3-title").append(newWebtoon[2].webtoonTitle);
+            }
         },
+
         error: function (err) {
             console.log(err.toString());
         }
     });
 
-    //
     function submit(i) {
         console.log(i);
-        title = document.getElementById("link1").value;
-        JSONObject = {'result': title};
+        title = document.getElementById("link"+i+"").value;
+        JSONObject = {'id': i, 'ordering' : i, 'webtoonTitle' : title};
 
         $.ajax({
             url: '/api/webtoons/registNew',
@@ -174,12 +180,43 @@
             contentType: "application/json",
             success: function (data) {
                 console.log("새웹툰 불러오기, 웹툰 아이디 : " + data.webtoonId);
-                $("#newWebtoon1-title").text(data.title);
-                $("#newWebtoon1").html('<img src="/webtoons/images/'+data.webtoonImageId+'">');
+                webtoonId = data.webtoonId;
+                webtoonImageId = data.webtoonImageId;
 
-                // $("#submit1").removeAttr("onclick");
-                // $("#submit1").text("적용");
-                // $("#submit1").attr("onclick", "confirm1()");
+                $('#newWebtoon'+i+'-title').text(data.webtoonTitle);
+                $('#newWebtoon'+i+'').html('<img src="/webtoons/images/'+data.webtoonImageId+'">');
+                $('#submit'+i+'').removeAttr("onclick");
+                $('#submit'+i+'').text("적용");
+                $('#submit'+i+'').attr("onclick", "confirms("+i+")");
+            },
+            error: function (err) {
+                console.log(err.toString());
+            }
+        })
+
+    }
+
+    function confirms(i) {
+
+        JSONObject={
+            'id': i,
+            'ordering':i,
+            'webtoonId':webtoonId,
+            'webtoonTitle':title,
+            'webtoonImageId': webtoonImageId
+        };
+
+        $.ajax({
+            url: '/api/newwebtoons',
+            method: 'put',
+            data: JSON.stringify(JSONObject),
+            async: true,
+            contentType: "application/json",
+            success: function (data) {
+                console.log("웹툰업데이트 성공");
+                $('#submit'+i+'').removeAttr("onclick");
+                $('#submit'+i+'').text("확인");
+                $('#submit'+i+'').attr("onclick", "submit("+i+")");
             },
             error: function (err) {
                 console.log(err.toString());
@@ -188,6 +225,8 @@
         })
     }
 
+
 </script>
 </body>
 </html>
+

@@ -2,6 +2,7 @@ package com.project.picktoon.repository;
 
 import com.project.picktoon.domain.Webtoon;
 import com.project.picktoon.repository.custom.WebtoonRepositoryCustom;
+import com.project.picktoon.util.PlatformType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -49,10 +50,10 @@ public interface WebtoonRepository extends JpaRepository<Webtoon, Long>, Webtoon
     public List<Webtoon> getWebtoonsByKeywordAndUpdate(@Param("keywordId")Long keywordId);
 
     @Query("SELECT w FROM Webtoon w INNER JOIN FETCH w.platform p LEFT JOIN FETCH  w.keywords k WHERE p.platformName =:platform AND w.title =:title")
-    public Webtoon getWebtoonByTitleAndAndPlatform(@Param("title")String title, @Param("platform")String platform);
+    public Webtoon getWebtoonByTitleAndAndPlatform(@Param("title")String title, @Param("platform")PlatformType platform);
 
     @Query("SELECT w FROM Webtoon w INNER JOIN FETCH w.platform p LEFT JOIN FETCH w.keywords k WHERE p.platformName =:platform AND k.id =:keywordId")
-    public List<Webtoon> getWebtoonsByPlatformAndKeyword(@Param("platform")String platform , @Param("keywordId")Long keywordId);
+    public List<Webtoon> getWebtoonsByPlatformAndKeyword(@Param("platform")PlatformType platform , @Param("keywordId")Long keywordId);
 
     @Query("SELECT w FROM Webtoon w INNER JOIN FETCH w.platform p WHERE p.id =:platformId")
     public List<Webtoon> getWebtoonsByPlatform(@Param("platformId")int platformId);

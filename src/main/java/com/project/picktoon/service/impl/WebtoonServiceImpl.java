@@ -5,6 +5,7 @@ import com.project.picktoon.domain.Webtoon;
 import com.project.picktoon.dto.SearchKeyword;
 import com.project.picktoon.repository.WebtoonRepository;
 import com.project.picktoon.service.WebtoonService;
+import com.project.picktoon.util.PlatformType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,13 +76,13 @@ public class WebtoonServiceImpl implements WebtoonService {
 
     @Override
     @Transactional(readOnly = true)
-    public Webtoon getWebtoonByTitleAndPlatform(String title, String platform) {
+    public Webtoon getWebtoonByTitleAndPlatform(String title, PlatformType  platform) {
         return webtoonRepository.getWebtoonByTitleAndAndPlatform(title, platform);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public long getCountByPlatformAndKeyword(String platform, Long keywordId) {
+    public long getCountByPlatformAndKeyword(PlatformType platform, Long keywordId) {
         return webtoonRepository.getWebtoonsByPlatformAndKeyword(platform, keywordId).size();
     }
 
