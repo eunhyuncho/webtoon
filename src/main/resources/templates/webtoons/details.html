@@ -173,7 +173,7 @@
             }
 
             if(webtoondetail.myWebtoon) {
-                var notread = $('<button type="submit" class="btn btn-primary btn-read" onclick="not_subscription();" id="webtoon-read">'
+                var notread = $('<button type="submit" class="btn btn-primary btn-read" onclick="not_subscription();" style="background-color:gray; border: gray" id="webtoon-read">'
                     + '구독취소' + '</button>');
                 notread.appendTo($('#details-buttons'));
             }else{
@@ -214,6 +214,7 @@
                     myWebtoonId = resp.myWebtoonId;
                     $("#heart-icon").attr('src', '/icon/heart_select.png');
                     $("#webtoon-subscription").text(subscription_count + 1);
+                    $("#webtoon-read").attr("style", "background-color:gray; border: gray");
                     $("#webtoon-read").text("구독취소");
                     $("#webtoon-read").removeAttr("onclick");
                     $("#webtoon-read").attr("onclick", "not_subscription()");
@@ -238,6 +239,7 @@
                     console.log("구독 취소");
                     $("#heart-icon").attr('src', '/icon/heart_none_select.png');
                     $("#webtoon-subscription").text(subscription_count - 1);
+                    $("#webtoon-read").attr("style", "background-color:#007bff; border: #007bff");
                     $("#webtoon-read").text("구독하기");
                     $("#webtoon-read").removeAttr("onclick");
                     $("#webtoon-read").attr("onclick", "subscription()");
