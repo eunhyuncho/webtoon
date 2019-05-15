@@ -28,8 +28,9 @@ public class NewWebtoonApiController {
 
             for(NewWebtoon newWebtoon : newWebtoonlist){
                 NewWebtoonDto newWebtoonDto = modelMapper.map(newWebtoon, NewWebtoonDto.class);
-                //TODO 이미지 추가하고 테스트하기
-//            newWebtoonDto.setWebtoonImageId(newWebtoon.getWebtoon().getWebtoonImage().getId());
+
+                if(!newWebtoon.getWebtoon().getWebtoonImages().isEmpty())
+                    newWebtoonDto.setWebtoonImageId(newWebtoon.getWebtoon().getWebtoonImages().get(0).getId());
                 newWebtoons.add(newWebtoonDto);
             }
         return new ResponseEntity<>(newWebtoons, HttpStatus.OK);

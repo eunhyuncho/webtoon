@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ADD NewWebtoon</title>
+    <title>Add NewWebtoon</title>
 
     <script src="/webjars/jquery/3.3.1-2/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -92,24 +92,23 @@
 
 </head>
 <body>
-<!--TODO : 물어보기 - 노가다 말고 어떤 방법이 있으까요...-->
 
 <div class = "card">
     <div class = "card-body">
         <div class="form-group">
             <h1>새 웹툰 추가하기 : </h1>
             <input type="text" name="link1" id="link1" placeholder="NEW WEBTOON1">
-            <button id="submit1" class="btn btn-info text-white btn-preview" style="margin: 0 auto;" onclick="submit1();">확인</button>
+            <button id="submit1" class="btn btn-info text-white btn-preview" style="margin: 0 auto;" onclick="submit(1);">확인</button>
             <button id="cnacel1" class="btn text-white btn-cancle" style="margin: 0 auto;" onclick="clearForm(this.form);">취소</button>
         </div>
         <div class="form-group">
             <input type="text" name="link2" id="link2" placeholder="NEW WEBTOON2">
-            <button id="submit2" class="btn btn-info text-white btn-preview" style="margin: 0 auto;" onclick="submit2();">확인</button>
+            <button id="submit2" class="btn btn-info text-white btn-preview" style="margin: 0 auto;" onclick="submit(2);">확인</button>
             <button id="cnacel2" class="btn text-white btn-cancle" style="margin: 0 auto;" onclick="clearForm(this.form);">취소</button>
         </div>
         <div class="form-group">
             <input type="text" name="link3" id="link3" placeholder="NEW WEBTOON3">
-            <button id="submit3" class="btn btn-info text-white btn-preview" style="margin: 0 auto;" onclick="submit3();">확인</button>
+            <button id="submit3" class="btn btn-info text-white btn-preview" style="margin: 0 auto;" onclick="submit(3);">확인</button>
             <button id="cancle3" class="btn text-white btn-cancle" style="margin: 0 auto;" onclick="clearForm(this.form);">취소</button>
         </div>
     </div>
@@ -126,13 +125,13 @@
             </li>
             <li>
                 <div class="aspect_1_1">
-                    <div class="img1" id="newWebtoon2"><img src="#"></div>
+                    <div class="img1" id="newWebtoon2"><!--이미지--></div>
                 </div>
                 <p id="newWebtoon2-title"><!--title--></p>
             </li>
             <li>
                 <div class="aspect_1_1">
-                    <div class="img1" id="newWebtoon3"><img src="#"></div>
+                    <div class="img1" id="newWebtoon3"><!--이미지--></div>
                 </div>
                 <p id="newWebtoon3-title"><!--title--></p>
             </li>
@@ -140,12 +139,6 @@
     </section>
 
 <script>
-    var title;
-    var ordering;
-    var webtoonId;
-    var id;
-    var JSONObject;
-
     $.ajax({
         url: '/api/newwebtoons',
         method: 'get',
@@ -153,19 +146,23 @@
         contentType: "application/json",
         success: function (newWebtoon) {
             console.log("새웹툰 불러오기 성공");
-            //TODO : 이미지 가져오기
+            console.log(newWebtoon);
 
-            $("#newWebtoon1-title").append(newWebtoon[0].webtoonTitle);
-            $("#newWebtoon2-title").append(newWebtoon[1].webtoonTitle);
-            $("#newWebtoon3-title").append(newWebtoon[2].webtoonTitle);
+            // $("#newWebtoon1").append('<img src="/webtoons/images/'+newWebtoon[0].webtoonImageId+'">');
+            // $("#newWebtoon2").append('<img src="/webtoons/images/'+newWebtoon[1].webtoonImageId+'">');
+            // $("#newWebtoon3").append('<img src="/webtoons/images/'+newWebtoon[2].webtoonImageId+'">');
+            // $("#newWebtoon1-title").append(newWebtoon[0].webtoonTitle);
+            // $("#newWebtoon2-title").append(newWebtoon[1].webtoonTitle);
+            // $("#newWebtoon3-title").append(newWebtoon[2].webtoonTitle);
         },
         error: function (err) {
             console.log(err.toString());
         }
-
     });
 
-    function submit1() {
+    //
+    function submit(i) {
+        console.log(i);
         title = document.getElementById("link1").value;
         JSONObject = {'result': title};
 
@@ -176,13 +173,13 @@
             async: true,
             contentType: "application/json",
             success: function (data) {
-                webtoonId=data.webtoonId;
                 console.log("새웹툰 불러오기, 웹툰 아이디 : " + data.webtoonId);
                 $("#newWebtoon1-title").text(data.title);
-                //TODO 이미지도 바꾸
+                $("#newWebtoon1").html('<img src="/webtoons/images/'+data.webtoonImageId+'">');
+
                 // $("#submit1").removeAttr("onclick");
-                $("#submit1").text("적용");
-                $("#submit1").attr("onclick", "confirm1()");
+                // $("#submit1").text("적용");
+                // $("#submit1").attr("onclick", "confirm1()");
             },
             error: function (err) {
                 console.log(err.toString());
@@ -191,157 +188,6 @@
         })
     }
 
-    function confirm1() {
-        id=1;
-        ordering=1;
-        JSONObject={
-            'id': id,
-            'ordering':ordering,
-            'webtoonId':webtoonId,
-            'webtoonTitle':title
-        };
-
-        $.ajax({
-            url: '/api/newwebtoons',
-            method: 'put',
-            data: JSON.stringify(JSONObject),
-            async: true,
-            contentType: "application/json",
-            success: function (data) {
-                console.log("웹툰업데이트 성공");
-            },
-            error: function (err) {
-                console.log(err.toString());
-            }
-
-        })
-    }
-
-    function clearForm(o) {
-        alert("취소하시겠습니까?");
-        $('[type=text]', o).val('');
-        $("#submit1").text("확인");
-        $("#submit1").attr("onclick", "submit1()");
-    }
-
-    // 순서 : 2번째
-    function submit2() {
-        title = document.getElementById("link2").value;
-        JSONObject = {'result': title};
-
-        $.ajax({
-            url: '/api/webtoons/registNew',
-            method: 'post',
-            data: JSON.stringify(JSONObject),
-            async: true,
-            contentType: "application/json",
-            success: function (data) {
-                webtoonId=data.webtoonId;
-                console.log("새웹툰 불러오기, 웹툰 아이디 : " + data.webtoonId);
-                $("#newWebtoon2-title").text(data.title);
-                //TODO 이미지
-                $("#submit2").text("적용");
-                $("#submit2").attr("onclick", "confirm2()");
-            },
-            error: function (err) {
-                console.log(err.toString());
-            }
-
-        })
-    }
-
-    function confirm2() {
-        id=2;
-        ordering=2;
-        JSONObject={
-            'id': id,
-            'ordering':ordering,
-            'webtoonId':webtoonId,
-            'webtoonTitle':title
-        };
-
-        $.ajax({
-            url: '/api/newwebtoons',
-            method: 'put',
-            data: JSON.stringify(JSONObject),
-            async: true,
-            contentType: "application/json",
-            success: function (data) {
-                console.log("웹툰업데이트 성공");
-            },
-            error: function (err) {
-                console.log(err.toString());
-            }
-
-        })
-    }
-
-    function clearForm(o){
-        alert("취소하시겠습니까?");
-        $('[type=text]', o).val('');
-        $("#submit2").text("확인");
-        $("#submit2").attr("onclick", "submit2()");
-    }
-
-    // 순서 : 3번째
-
-    function submit3() {
-        title = document.getElementById("link3").value;
-        JSONObject = {'result': title};
-
-        $.ajax({
-            url: '/api/webtoons/registNew',
-            method: 'post',
-            data: JSON.stringify(JSONObject),
-            async: true,
-            contentType: "application/json",
-            success: function (data) {
-                webtoonId=data.webtoonId;
-                console.log("새웹툰 불러오기, 웹툰 아이디 : " + data.webtoonId);
-                $("#newWebtoon3-title").text(data.title);
-                //TODO 이미지
-                $("#submit3").text("적용");
-                $("#submit3").attr("onclick", "confirm3()");
-            },
-            error: function (err) {
-                console.log(err.toString());
-            }
-
-        })
-    }
-
-    function confirm3() {
-        id=3;
-        ordering=3;
-        JSONObject={
-            'id': id,
-            'ordering':ordering,
-            'webtoonId':webtoonId,
-            'webtoonTitle':title
-        };
-
-        $.ajax({
-            url: '/api/newwebtoons',
-            method: 'put',
-            data: JSON.stringify(JSONObject),
-            async: true,
-            contentType: "application/json",
-            success: function (data) {
-                console.log("웹툰업데이트 성공");
-            },
-            error: function (err) {
-                console.log(err.toString());
-            }
-
-        })
-    }
-
-    function clearForm(o){
-        alert("취소하시겠습니까?");
-        $('[type=text]', o).val('');
-        $("#submit3").text("확인");
-        $("#submit3").attr("onclick", "submit3()");
-    }
 </script>
 </body>
 </html>

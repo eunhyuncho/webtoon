@@ -278,4 +278,8 @@ public class AdminController {
     //관리자웹툰 검색하기 결과
     @GetMapping("/searchlist")
     public String searchWebtoon() { return "admin/adminSearchlist";}
+
+    //NewWebtoon등록하기
+    @GetMapping("/newWebtoon")
+    public String registNewWebtoon() {return "admin/registNewWebtoon";}
 }
