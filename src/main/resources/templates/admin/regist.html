@@ -18,90 +18,90 @@
 </head>
 <body>
 <div class="container">
-<div class="card" style="margin-top: 1rem; margin-bottom: 1rem;">
-    <div class="card-header bg-info text-center text-white"><h2>웹툰 등록</h2></div>
-    <form method="post" action="/admin/regist" style="padding: 1.5rem" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="title">웹툰 제목</label>
-            <input type="text" class="form-control" id="title" name="title" placeholder="웹툰 제목">
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                <label for="author1">작가1</label>
-                <input type="text" class="form-control" id="author1" name="author" placeholder="작가 1">
+    <div class="card" style="margin-top: 1rem; margin-bottom: 1rem;">
+        <div class="card-header bg-info text-center text-white"><h2>웹툰 등록</h2></div>
+        <form method="post" action="/admin/regist" style="padding: 1.5rem" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="title">웹툰 제목</label>
+                <input type="text" class="form-control" id="title" name="title" placeholder="웹툰 제목">
             </div>
-            <div class="form-group col-md-6">
-                <label for="author1">작가2</label>
-                <input type="text" class="form-control" id="author2" name="author" placeholder="작가 2">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="author1">작가1</label>
+                    <input type="text" class="form-control" id="author1" name="author" placeholder="작가 1">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="author1">작가2</label>
+                    <input type="text" class="form-control" id="author2" name="author" placeholder="작가 2">
+                </div>
             </div>
-        </div>
-        <p class="key1">요일</p>
+            <p class="key1">요일</p>
             <div class="form-check form-check-inline" th:each="day : ${days}">
                 <label class="checkbox-inline">
-                <input class="form-check-input" type="checkbox" th:value="${day.getId()}" name="day">
+                    <input class="form-check-input" type="checkbox" th:value="${day.getId()}" name="day">
                     <span  th:text="${day.getKeywordValue()}"></span>
                 </label>
             </div>
-        <div class="form-group">
-            <label>장르</label>
-            <select name="multicheckbox_genre[]" multiple="multiple" class="4colactive">
-                <option th:each="genre : ${genres}" th:value="${genre.getId()}" th:text="${genre.getKeywordValue()}"></option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>키워드</label>
-            <select name="multicheckbox_keyword[]" multiple="multiple" class="4colactive">
-                <option th:each="keyword : ${keywords}" th:value="${keyword.getId()}" th:text="${keyword.getKeywordValue()}"></option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="link">링크</label>
-            <input type="text" class="form-control" id="link" name="link" placeholder="웹툰 링크">
-        </div>
-        <div class="form-group">
-            <label for="count">공개 회차</label>
-            <input type="text" class="form-control" id="count" name="count" placeholder="ex) 32화">
-        </div>
-        <div class="form-group">
-            <label for="updatedDate">업데이트 날짜</label>
-            <input type="text" class="form-control" id="updatedDate" name="updatedDate" placeholder="2018.01.01">
-        </div>
-        <div class="form-group">
-            <label for="seeage">이용자</label>
-            <select class="form-control" id="seeage" name="seeage">
-                <option value="0">전체관람가</option>
-                <option value="1">12세관람가</option>
-                <option value="2">15세관람가</option>
-                <option value="3">19세관람가</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="platform">플랫폼</label>
-            <select class="form-control" id="platform" name="platform">
-                <option th:each="platform : ${platforms}" th:value="${platform.id}" th:text="${platform.platformName}"></option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="description">웹툰 소개</label>
-            <textarea class="form-control" id="description" name="description" rows="3"></textarea><br>
-        </div>
-        <div class="form-group">
-            <label for="image1">image1 (썸네일 이미지) : </label><input type="file" name="image" id="image1">
-        </div>
+            <div class="form-group">
+                <label>장르</label>
+                <select name="multicheckbox_genre[]" multiple="multiple" class="4colactive">
+                    <option th:each="genre : ${genres}" th:value="${genre.getId()}" th:text="${genre.getKeywordValue()}"></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>키워드</label>
+                <select name="multicheckbox_keyword[]" multiple="multiple" class="4colactive">
+                    <option th:each="keyword : ${keywords}" th:value="${keyword.getId()}" th:text="${keyword.getKeywordValue()}"></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="link">링크</label>
+                <input type="text" class="form-control" id="link" name="link" placeholder="웹툰 링크">
+            </div>
+            <div class="form-group">
+                <label for="count">공개 회차</label>
+                <input type="text" class="form-control" id="count" name="count" placeholder="ex) 32화">
+            </div>
+            <div class="form-group">
+                <label for="updatedDate">업데이트 날짜</label>
+                <input type="text" class="form-control" id="updatedDate" name="updatedDate" placeholder="2018.01.01">
+            </div>
+            <div class="form-group">
+                <label for="seeage">이용자</label>
+                <select class="form-control" id="seeage" name="seeage">
+                    <option value="0">전체관람가</option>
+                    <option value="1">12세관람가</option>
+                    <option value="2">15세관람가</option>
+                    <option value="3">19세관람가</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="platform">플랫폼</label>
+                <select class="form-control" id="platform" name="platform">
+                    <option th:each="platform : ${platforms}" th:value="${platform.id}" th:text="${platform.platformName}"></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="description">웹툰 소개</label>
+                <textarea class="form-control" id="description" name="description" rows="3"></textarea><br>
+            </div>
+            <div class="form-group">
+                <label for="image1">image1 (썸네일 이미지) : </label><input type="file" name="image" id="image1">
+            </div>
 
-        <div class="form-group">
-            <label for="image2">image2 (상세보기 이미지 ): </label><input type="file" name="image" id="image2">
-        </div>
+            <div class="form-group">
+                <label for="image2">image2 (상세보기 이미지 ): </label><input type="file" name="image" id="image2">
+            </div>
 
-        <input
-                type="hidden"
-                th:name="${_csrf.parameterName}"
-                th:value="${_csrf.token}" />
-        <br>
+            <input
+                    type="hidden"
+                    th:name="${_csrf.parameterName}"
+                    th:value="${_csrf.token}" />
+            <br>
 
-        <button type="submit" class="btn btn-info text-white" style="margin: 0 auto;">웹툰등록</button>
-    </form>
-</div>
+            <button type="submit" class="btn btn-info text-white" style="margin: 0 auto;">웹툰등록</button>
+        </form>
+    </div>
 </div>
 <script>
     $('select[multiple]').multiselect({

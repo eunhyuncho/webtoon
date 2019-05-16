@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="/layout/default">
+      layout:decorator="layout/default">
 <head>
   <th:block layout:fragment="css">
     <link href="/css/search-list.css" rel = "stylesheet">
@@ -15,32 +15,32 @@
 </article>
 
 <script>
-    //  인코딩된 url --> 다시 한글로 변환
-    var decodeURI = decodeURI(document.location.href);
-    // 파라미터 가져오기..
-    var params = decodeURI.split("?");
-    $.ajax({
-        url: '/api/webtoons/search?' + params[1],
-        method: 'get',
-        async: true,
-        contentType: "application/json",
-        success: function (resp) {
-            console.log("검색 성공");
-            for(var i = 0; i < resp.length; i++) {
-                var webtoonRow = $('<li class="result-row">' +
-                    '<img src= "/webtoons/images/'+resp[i].webtoonImages[0].id+'" alt="이미지" class="webtoon_image">' +
-                    '<div class="webtoon-detail">' +
-                    '<p class="webtoon-title"><b><a href="/webtoons/'+resp[i].id+'">'+resp[i].title+'</a></b></p>'+
-                    '<span class="webtoon-count">'+resp[i].totalCount+'</span>'+
-                    '<span class="webtoon-date">'+resp[i].updatedDate+'</span>'+
-                    '</div>'+'</li>');
-                webtoonRow.appendTo($('#result-list'));
-            }
-        },
-        error: function (err) {
-            console.log(err.toString());
-        }
-    });
+  //  인코딩된 url --> 다시 한글로 변환
+  var decodeURI = decodeURI(document.location.href);
+  // 파라미터 가져오기..
+  var params = decodeURI.split("?");
+  $.ajax({
+    url: '/api/webtoons/search?' + params[1],
+    method: 'get',
+    async: true,
+    contentType: "application/json",
+    success: function (resp) {
+      console.log("검색 성공");
+      for(var i = 0; i < resp.length; i++) {
+        var webtoonRow = $('<li class="result-row">' +
+                '<img src= "/webtoons/images/'+resp[i].webtoonImages[0].id+'" alt="이미지" class="webtoon_image">' +
+                '<div class="webtoon-detail">' +
+                '<p class="webtoon-title"><b><a href="/webtoons/'+resp[i].id+'">'+resp[i].title+'</a></b></p>'+
+                '<span class="webtoon-count">'+resp[i].totalCount+'</span>'+
+                '<span class="webtoon-date">'+resp[i].updatedDate+'</span>'+
+                '</div>'+'</li>');
+        webtoonRow.appendTo($('#result-list'));
+      }
+    },
+    error: function (err) {
+      console.log(err.toString());
+    }
+  });
 </script>
 </body>
 </html>

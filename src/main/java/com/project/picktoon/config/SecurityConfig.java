@@ -63,7 +63,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(loginSuccessHandler)    // 로그인 후 처리...
                 //.defaultSuccessUrl("/main", true)
                 .and()
-                .csrf().ignoringAntMatchers("/**");
+                .csrf().ignoringAntMatchers("/**")
+                .and()
+                .headers().frameOptions().sameOrigin();
         //api 사용시 csrf문제..
     }
 }

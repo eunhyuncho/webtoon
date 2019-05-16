@@ -14,9 +14,6 @@ public interface WebtoonRepository extends JpaRepository<Webtoon, Long>, Webtoon
     @Query("SELECT w FROM Webtoon w INNER JOIN FETCH w.platform  LEFT JOIN FETCH w.keywords WHERE w.id =:id")
     public Webtoon getWebtoon(@Param("id")Long id);
 
-    @Query("SELECT w FROM Webtoon w WHERE w.title = :title")
-    public Webtoon getWebtoonByTitle(@Param("title")String title);
-
     @Query(value = "SELECT * FROM Webtoon ORDER BY subscription DESC LIMIT 3", nativeQuery = true)
     public List<Webtoon> getBestWebtoons();
 
@@ -53,9 +50,5 @@ public interface WebtoonRepository extends JpaRepository<Webtoon, Long>, Webtoon
     public Webtoon getWebtoonByTitleAndAndPlatform(@Param("title")String title, @Param("platform")PlatformType platform);
 
     @Query("SELECT w FROM Webtoon w INNER JOIN FETCH w.platform p LEFT JOIN FETCH w.keywords k WHERE p.platformName =:platform AND k.id =:keywordId")
-    public List<Webtoon> getWebtoonsByPlatformAndKeyword(@Param("platform")PlatformType platform , @Param("keywordId")Long keywordId);
-
-    @Query("SELECT w FROM Webtoon w INNER JOIN FETCH w.platform p WHERE p.id =:platformId")
-    public List<Webtoon> getWebtoonsByPlatform(@Param("platformId")int platformId);
-
+    public List<Webtoon> getWebtoonsByPlatformAndKeyword(@Param("platform") PlatformType platform , @Param("keywordId")Long keywordId);
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="/layout/default">
+      layout:decorator="layout/default">
 <head>
     <title>PICKTOON</title>
 
@@ -22,38 +22,38 @@
     <section class="new_webtoons">
         <h3 class="main_webtoon">NEW WEBTOONS</h3>
         <ol class="row" id="newWebtoon_list">
-          <!--신간출력-->
+            <!--신간출력-->
         </ol>
     </section>
 
-            <script>
-                $.ajax({
-                    url:'/api/newwebtoons',
-                    method:'GET',
-                    async:true,
-                    ContentType: "application/json",
-                    success: function (newWebtoon) {
-                        console.log("검색 성공");
-                        for(var i = 0; i < 3; i++) {
-                            var newWebtoons = $('<li>' +
-                                '<div class="aspect_1_1">' +
-                                '<a href="/webtoons/'+ newWebtoon[i].webtoonId + '">' +
-                                '<img src="/webtoons/images/' + newWebtoon[i].webtoonId + '">' +
-                                '</a>'+
-                                '</div>'+
-                                '<p>'+
-                                '<a href="/webtoons/'+ newWebtoon[i].webtoonId + '">'+ newWebtoon[i].webtoonTitle+'</a>'+
-                                '</p>'+
-                                '</li>');
-                            newWebtoons.appendTo($('#newWebtoon_list'));
-                        }
-                    },
-                    error: function (err) {
-                        console.log(err.toString());
-                    }
-                });
+    <script>
+        $.ajax({
+            url:'/api/newwebtoons',
+            method:'GET',
+            async:true,
+            ContentType: "application/json",
+            success: function (newWebtoon) {
+                console.log("검색 성공");
+                for(var i = 0; i < 3; i++) {
+                    var newWebtoons = $('<li>' +
+                        '<div class="aspect_1_1">' +
+                        '<a href="/webtoons/'+ newWebtoon[i].webtoonId + '">' +
+                        '<img src="/webtoons/images/' + newWebtoon[i].webtoonId + '">' +
+                        '</a>'+
+                        '</div>'+
+                        '<p>'+
+                        '<a href="/webtoons/'+ newWebtoon[i].webtoonId + '">'+ newWebtoon[i].webtoonTitle+'</a>'+
+                        '</p>'+
+                        '</li>');
+                    newWebtoons.appendTo($('#newWebtoon_list'));
+                }
+            },
+            error: function (err) {
+                console.log(err.toString());
+            }
+        });
 
-            </script>
+    </script>
 
     <hr>
 

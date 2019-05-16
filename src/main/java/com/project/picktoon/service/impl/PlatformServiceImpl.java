@@ -3,6 +3,7 @@ package com.project.picktoon.service.impl;
 import com.project.picktoon.domain.Platform;
 import com.project.picktoon.repository.PlatformRepository;
 import com.project.picktoon.service.PlatformService;
+import com.project.picktoon.util.PlatformType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +35,7 @@ public class PlatformServiceImpl implements PlatformService {
 
     @Override
     @Transactional(readOnly = true)
-    public Platform getPlatformByPlatformName(String name) {
+    public Platform getPlatformByPlatformName(PlatformType name) {
         return platformRepository.findByPlatformName(name);
     }
 

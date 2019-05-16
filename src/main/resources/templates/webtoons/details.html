@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="/layout/default">
+      layout:decorator="layout/default">
 <head>
     <title>상세 보기</title>
     <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/solid.js" integrity="sha384-+Ga2s7YBbhOD6nie0DzrZpJes+b2K1xkpKxTFFcx59QmVPaSA8c7pycsNaFwUK6l" crossorigin="anonymous"></script>
@@ -76,9 +76,7 @@
         <h3>키워드</h3>
     </div>
     <div style="flex-grow: 1" class="details-author">
-        <div class="h3-p" id="webtoon-keywords">
-            <!--키워드-->
-        </div>
+        <div class="h3-p" id="webtoon-keywords"><!--키워드--></div>
     </div>
 </section>
 <hr>
@@ -110,27 +108,28 @@
         success: function (webtoondetail) {
             console.log("검색 성공");
             console.log("UserId: " + webtoondetail.userId);
+            // console.log(webtoondetail.mywebtoonId);
             myWebtoonId = webtoondetail.mywebtoonId;
 
-                var author = new Array();
-                var keywords = new Array();
-                var genre= new Array();
-                var days = new Array();
+            var author = new Array();
+            var keywords = new Array();
+            var genre= new Array();
+            var days = new Array();
 
-                for(var i=0; i<webtoondetail.keywords.length; i++) {
-                    if (webtoondetail.keywords[i].keywordType === 1) {
-                        days.push(webtoondetail.keywords[i].keywordValue);
-                    }
-                    else if (webtoondetail.keywords[i].keywordType === 2){
-                        genre.push(webtoondetail.keywords[i].keywordValue);
-                    }
-                    else if (webtoondetail.keywords[i].keywordType === 3){
-                        author.push(webtoondetail.keywords[i].keywordValue);
-                    }
-                    else{
-                        keywords.push(webtoondetail.keywords[i].keywordValue);
-                    }
+            for(var i=0; i<webtoondetail.keywords.length; i++) {
+                if (webtoondetail.keywords[i].keywordType === 1) {
+                    days.push(webtoondetail.keywords[i].keywordValue);
                 }
+                else if (webtoondetail.keywords[i].keywordType === 2){
+                    genre.push(webtoondetail.keywords[i].keywordValue);
+                }
+                else if (webtoondetail.keywords[i].keywordType === 3){
+                    author.push(webtoondetail.keywords[i].keywordValue);
+                }
+                else{
+                    keywords.push(webtoondetail.keywords[i].keywordValue);
+                }
+            }
 
 
             if(webtoondetail.myWebtoon) {
@@ -149,8 +148,9 @@
             $("#webtoon-platform").append(webtoondetail.platformName);
 
             for(var i = 0; i < genre.length; i++) {
-                    // if(i>0) $("#webtoon-genre").append(" ");
-                $("#webtoon-genre").append('<button class="badge badge-pill badge-secondary badge-search" onclick="location.href=\'search?key2='+genre[i]+'\'">'+genre[i]+'</button>');
+                if(i>0) $("#webtoon-genre").append(" ");
+                //     else $("#webtoon-genre").append(" "+ keyword(4)[i]);
+                $("#webtoon-genre").append("#"+ genre[i]);
             }
 
             for(var i = 0; i < days.length; i++) {
@@ -159,8 +159,9 @@
             }
 
             for(var i = 0; i < keywords.length; i++) {
-                // if(i>0) $("#webtoon-keywords").append(" ");
-                $("#webtoon-keywords").append('<button class="badge badge-pill badge-secondary badge-search" onclick="location.href=\'search?key4='+keywords[i]+'\'">'+keywords[i]+'</button>');
+                if(i>0) $("#webtoon-keywords").append(" ");
+                //     else $("#webtoon-genre").append(" "+ keyword(2)[i]);
+                $("#webtoon-keywords").append("#"+ keywords[i]);
             }
 
             $("#webtoon-totalCount").append(webtoondetail.totalCount);
@@ -173,7 +174,7 @@
             }
 
             if(webtoondetail.myWebtoon) {
-                var notread = $('<button type="submit" class="btn btn-primary btn-read" onclick="not_subscription();" style="background-color:gray; border: gray" id="webtoon-read">'
+                var notread = $('<button type="submit" class="btn btn-primary btn-read" onclick="not_subscription();" id="webtoon-read">'
                     + '구독취소' + '</button>');
                 notread.appendTo($('#details-buttons'));
             }else{
@@ -193,7 +194,7 @@
         }
     });
 
-   //구독하기
+    //구독하기
     function subscription() {
         var id = params[4];
         var subscription_count = Number($("#webtoon-subscription").text());
@@ -214,7 +215,6 @@
                     myWebtoonId = resp.myWebtoonId;
                     $("#heart-icon").attr('src', '/icon/heart_select.png');
                     $("#webtoon-subscription").text(subscription_count + 1);
-                    $("#webtoon-read").attr("style", "background-color:gray; border: gray");
                     $("#webtoon-read").text("구독취소");
                     $("#webtoon-read").removeAttr("onclick");
                     $("#webtoon-read").attr("onclick", "not_subscription()");
@@ -236,19 +236,19 @@
             async: true,
             contentType: "application/json",
             success: function (resp) {
-                    console.log("구독 취소");
-                    $("#heart-icon").attr('src', '/icon/heart_none_select.png');
-                    $("#webtoon-subscription").text(subscription_count - 1);
-                    $("#webtoon-read").attr("style", "background-color:#007bff; border: #007bff");
-                    $("#webtoon-read").text("구독하기");
-                    $("#webtoon-read").removeAttr("onclick");
-                    $("#webtoon-read").attr("onclick", "subscription()");
+                console.log("구독 취소");
+                $("#heart-icon").attr('src', '/icon/heart_none_select.png');
+                $("#webtoon-subscription").text(subscription_count - 1);
+                $("#webtoon-read").text("구독하기");
+                $("#webtoon-read").removeAttr("onclick");
+                $("#webtoon-read").attr("onclick", "subscription()");
             },
             error: function (err) {
                 console.log(err.toString());
             }
         });
     }
+
 </script>
 
 </body>

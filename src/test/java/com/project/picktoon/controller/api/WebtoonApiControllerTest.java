@@ -72,9 +72,9 @@ public class WebtoonApiControllerTest {
 
 
         Keyword keyword1 = Keyword.builder().id(1L).keywordType(keywordDto1.getKeywordType())
-                                            .keywordValue(keywordDto1.getKeywordValue()).ordering(1).build();
+                .keywordValue(keywordDto1.getKeywordValue()).ordering(1).build();
         Keyword keyword2 = Keyword.builder().id(3L).keywordType(keywordDto1.getKeywordType())
-                                            .keywordValue(keywordDto2.getKeywordValue()).ordering(2).build();
+                .keywordValue(keywordDto2.getKeywordValue()).ordering(2).build();
 
         keywords1.add(keyword1);
         keywords1.add(keyword2);
@@ -82,18 +82,18 @@ public class WebtoonApiControllerTest {
         Platform platform = Platform.builder().id(1).platformName(PlatformType.Naver).build();
 
         WebtoonForm webtoonForm = WebtoonForm.builder()
-                                            .title("웹툰 제목")
-                                            .link("www.naver.com")
-                                            .description("어쩌구 저쩌구")
-                                            .seeAge(SeeAge.SEEAGE_12)
-                                            .state("연재중")
-                                            .keywords(keywords)
-                                            .platformId(1)
-                                            .subscription(0)
-                                            .updatedDate(new Date())
-                                            .updateState(false)
-                                            .totalCount("32화")
-                                            .build();
+                .title("웹툰 제목")
+                .link("www.naver.com")
+                .description("어쩌구 저쩌구")
+                .seeAge(SeeAge.SEEAGE_12)
+                .state("연재중")
+                .keywords(keywords)
+                .platformId(1)
+                .subscription(0)
+                .updatedDate(new Date())
+                .updateState(false)
+                .totalCount("32화")
+                .build();
 
 
 //        Webtoon webtoon = Webtoon.builder()
@@ -121,10 +121,10 @@ public class WebtoonApiControllerTest {
 
         //when —> 테스트 메소드
         mockMvc.perform(post("/api/webtoons")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .accept(MediaType.APPLICATION_JSON_UTF8)
-                        .content(objectMapper.writeValueAsString(webtoonForm))
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(webtoonForm))
         )
                 .andDo(print()) // 값을 출력할 수 있다.
                 .andExpect(status().isCreated());
@@ -144,8 +144,8 @@ public class WebtoonApiControllerTest {
         keywords.add(keyword2);
 
         Webtoon webtoon = Webtoon.builder()
-                            .title("1번 웹툰").platform(platform)
-                            .state("연재중").description("웹툰 상세 설명...").id(1L).keywords(keywords).build();
+                .title("1번 웹툰").platform(platform)
+                .state("연재중").description("웹툰 상세 설명...").id(1L).keywords(keywords).build();
 
         Mockito.when(webtoonService.getWebtoonById(1L)).thenReturn(webtoon);
 

@@ -1,11 +1,9 @@
 package com.project.picktoon.controller;
 
-import com.project.picktoon.controller.api.WebtoonApiController;
 import com.project.picktoon.domain.Keyword;
 import com.project.picktoon.domain.Platform;
 import com.project.picktoon.domain.Webtoon;
 import com.project.picktoon.domain.WebtoonImage;
-import com.project.picktoon.dto.WebtoonDto;
 import com.project.picktoon.service.KeywordService;
 import com.project.picktoon.service.PlatformService;
 import com.project.picktoon.service.WebtoonImageService;
@@ -14,7 +12,6 @@ import com.project.picktoon.util.KeywordType;
 import com.project.picktoon.util.SeeAge;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.Assert;
@@ -39,7 +36,6 @@ public class AdminController {
     private final PlatformService platformService;
     private final WebtoonImageService webtoonImageService;
     private final WebtoonService webtoonService;
-    private final WebtoonApiController webtoonApiController;
 
     @GetMapping("/regist")
     public String regist(Model model){
@@ -134,9 +130,10 @@ public class AdminController {
                 }
             }
         }else{
-            WebtoonImage imageFile = saveFileFromUrl(imgUrl, title, platformService.getPlatformById(platform).getPlatformName().toString());
-            imageFile.setName(title);
-            imageFile.setMimeType("image/jpeg");
+//            WebtoonImage imageFile = saveFileFromUrl(imgUrl, title, platformService.getPlatformById(platform).getPlatformName().toString());
+//            imageFile.setName(title);
+//            imageFile.setMimeType("image/jpeg");
+            WebtoonImage imageFile = new WebtoonImage(imgUrl, title, platformService.getPlatformById(platform).getPlatformName().toString());
 
             webtoon.addWebtoonImage(imageFile);
         }
@@ -190,36 +187,6 @@ public class AdminController {
         return dir;
     }
 
-    // url로 이미지 저장..
-    private WebtoonImage saveFileFromUrl(String url, String title, String platform){
-        String dir = "imagefile/webtoon/";
-        WebtoonImage webtoonImage = new WebtoonImage();
-        Calendar calendar = Calendar.getInstance();
-        dir = dir + calendar.get(Calendar.YEAR);
-        dir = dir + "/";
-        dir = dir + (calendar.get(Calendar.MONTH) + 1);
-        dir = dir + "/";
-        dir = dir + calendar.get(Calendar.DAY_OF_MONTH);
-        dir = dir + "/";
-        dir = dir + platform + "/"; // 플랫폼 디렉토리..
-        File dirFile = new File(dir);
-        dirFile.mkdirs(); // 디렉토리가 없을 경우 만든다. 퍼미션이 없으면 생성안될 수 있다.
-        dir = dir + title;
-        try{
-            URL imgUrl = new URL(url);
-            BufferedImage jpg = ImageIO.read(imgUrl);
-            File file = new File(dir+".jpg");
-            ImageIO.write(jpg, "jpg", file);
-            System.out.println("file length : "+file.length());
-
-            webtoonImage.setSaveFileName(dir+".jpg");
-            webtoonImage.setLength(file.length());
-
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
-        return webtoonImage;
-    }
 
     private List<Keyword> returnKeywords(Long[] ids){
         List<Keyword> result = new ArrayList<>();
@@ -229,26 +196,34 @@ public class AdminController {
         return result;
     }
 
-    @GetMapping("/search")
-    public String adminListwebtoon(Model model) {
-        List<Platform> platforms = platformService.getAllPlatforms();
-        model.addAttribute("platforms", platforms);
-        return "admin/adminSearch";
-    }
+//    private void makeThumbnail(String filePath, String fileName, String fileExt) throws Exception {
+//        // 저장된 원본파일로부터 BufferedImage 객체를 생성합니다.
+//        BufferedImage srcImg = ImageIO.read(new File(filePath));
+//        // 썸네일의 너비와 높이 입니다.
+//        int dw = 150;
+//        int dh = 150;
+//        // 원본 이미지의 너비와 높이 입니다. 
+//        int ow = srcImg.getWidth();
+//        int oh = srcImg.getHeight();
+//       // 원본 너비를 기준으로 하여 썸네일의 비율로 높이를 계산합니다.
+//        int nw = ow;
+//        int nh = (ow * dh)/dw;
+//        // 계산된 높이가 원본보다 높다면 crop이 안되므로 /
+//        // 원본 높이를 기준으로 썸네일의 비율로 너비를 계산합니다.
+//        if(nh > oh) {
+//            nw = (oh * dw) / dh;
+//            nh = oh;
+//        }
+//        // 계산된 크기로 원본이미지를 가운데에서 crop 합니다. 
+//        BufferedImage cropImg = Scalr.crop(srcImg, (ow-nw)/2, (oh-nh)/2, nw, nh);
+//        // crop된 이미지로 썸네일을 생성합니다.
+//        BufferedImage destImg = Scalr.resize(cropImg, dw, dh);
+//        // 썸네일을 저장합니다. 이미지 이름 앞에 "THUMB_" 를 붙여 표시했습니다.
+//        String thumbName = "path" + "THUMB_" + fileName;
+//        File thumbFile = new File(thumbName);
+//        ImageIO.write(destImg, fileExt.toUpperCase(), thumbFile);
+//    }
 
-    //플랫폼으로 웹툰 가져오기
-    //TODO url 다시 정하기
-    @GetMapping("/webtoons")
-    public ResponseEntity<List<WebtoonDto>> getWebtoonsByPlatform(@RequestParam(name = "platformId") int platformId){
-        List<Webtoon> webtoonlist = webtoonService.getWebtoonsByPlatfrom(platformId);
-        return webtoonApiController.getListWebtoonDto(webtoonlist);
-    }
 
-    //관리자웹툰 검색하기 결과
-    @GetMapping("/searchlist")
-    public String searchWebtoon() { return "admin/adminSearchlist";}
 
-    //NewWebtoon등록하기
-    @GetMapping("/newWebtoon")
-    public String registNewWebtoon() {return "admin/registNewWebtoon";}
 }

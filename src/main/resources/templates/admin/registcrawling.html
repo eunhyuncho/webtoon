@@ -118,7 +118,7 @@
                 <label for="image1">image1 (썸네일 이미지) : </label><input type="file" name="image" id="image1">
             </div>
             <!--<div class="form-group">-->
-                <!--<label for="image2">image2 (상세보기 이미지 ): </label><input type="file" name="image" id="image2">-->
+            <!--<label for="image2">image2 (상세보기 이미지 ): </label><input type="file" name="image" id="image2">-->
             <!--</div>-->
 
             <input type="hidden" id="imgurl" name="imgurl">
@@ -174,7 +174,7 @@
                             console.log("genreId : "+genreId );
                             $("#genres").val(data.genreIds[i]).prop("selected",true);
                         }
-                       // $("#genres").multiselect("select", data.genreIds);
+                        // $("#genres").multiselect("select", data.genreIds);
                         $("#genres").multiselect("refresh");
                     }
                     $('select[multiple]').multiselect('reload');

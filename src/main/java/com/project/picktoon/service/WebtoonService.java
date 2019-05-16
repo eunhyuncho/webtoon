@@ -9,7 +9,6 @@ import java.util.List;
 public interface WebtoonService {
     public List<Webtoon> getWebtoons(List<SearchKeyword> keywords, String searchStr, int page);
     public Webtoon getWebtoonById(Long id);
-    public Webtoon getWebtoonByTitle(String title);
     public List<Webtoon> getBestWebtoons();
     public Webtoon addWebtoon(Webtoon webtoon);
     public void updateWebtoon(Webtoon webtoon);
@@ -17,8 +16,7 @@ public interface WebtoonService {
     public boolean existWebtoonById(Long id);
     public List<Webtoon> getUpdateCheckWebtoon(Long keywordId);
     public Webtoon getWebtoonByTitleAndPlatform(String title, PlatformType platform);
-    public long getCountByPlatformAndKeyword(PlatformType  platform, Long keywordId);
+    public long getCountByPlatformAndKeyword(PlatformType platform, Long keywordId);
     public void updateWebtoonUpdateState(Long keywordId);
-    public List<Webtoon> getWebtoonsByPlatfrom(int platformId);
 
 }

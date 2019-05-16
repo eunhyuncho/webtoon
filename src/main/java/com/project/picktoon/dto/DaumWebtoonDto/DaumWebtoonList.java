@@ -1,6 +1,5 @@
-package com.project.picktoon.dto.DaumWebtoonDto;
+package com.project.picktoon.dto.daumWebtoonDto;
 
-import com.project.picktoon.dto.DaumWebtoonDto.DaumWebtoonInfo;
 import lombok.Getter;
 import lombok.Setter;
 

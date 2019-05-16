@@ -7,51 +7,51 @@
     <script src="/webjars/jquery/3.3.1-2/jquery.min.js"></script>
 </head>
 <body>
-    <div class = "card">
-        <div class = "card-body">
-            <div class="form-group">
-                <p>링크 : </p>
-                <input type="text" name="link" id="link">
-            </div>
-
-            <p class="key1">요일</p>
-            <div class="form-check form-check-inline" th:each="day : ${days}">
-                <label class="checkbox-inline">
-                    <input class="form-check-input" type="radio" th:value="${day.getId()}" name="updateDate">
-                    <span  th:text="${day.getKeywordValue()}"></span>
-                </label>
-            </div>
-
-            <button id="submit" class="btn btn-info text-white" style="margin: 0 auto;">웹툰 등록</button>
+<div class = "card">
+    <div class = "card-body">
+        <div class="form-group">
+            <p>링크 : </p>
+            <input type="text" name="link" id="link">
         </div>
+
+        <p class="key1">요일</p>
+        <div class="form-check form-check-inline" th:each="day : ${days}">
+            <label class="checkbox-inline">
+                <input class="form-check-input" type="radio" th:value="${day.getId()}" name="updateDate">
+                <span  th:text="${day.getKeywordValue()}"></span>
+            </label>
+        </div>
+
+        <button id="submit" class="btn btn-info text-white" style="margin: 0 auto;">웹툰 등록</button>
     </div>
+</div>
 
-    <script>
-        $("#submit").on('click', function () {
+<script>
+    $("#submit").on('click', function () {
 
-            var link = $('#link').val();
-            var updateDate = $('input:radio[name="updateDate"]:checked').val();
+        var link = $('#link').val();
+        var updateDate = $('input:radio[name="updateDate"]:checked').val();
 
 
-            var JSONObject = {'link' : link, 'updateDate' : updateDate };
+        var JSONObject = {'link' : link, 'updateDate' : updateDate };
 
-            $.ajax({
-                url: '/api/admin/webtoons/daum',
-                method: 'post',
-                data: JSON.stringify(JSONObject),
-                async: true,
-                contentType: "application/json",
-                success: function (data) {
-                    console.log(data.result);
-                    alert(data.result);
-                },
-                error: function (err) {
-                    console.log(err.toString());
-                    alert(data.result);
-                }
+        $.ajax({
+            url: '/api/admin/webtoons/daum',
+            method: 'post',
+            data: JSON.stringify(JSONObject),
+            async: true,
+            contentType: "application/json",
+            success: function (data) {
+                console.log(data.result);
+                alert(data.result);
+            },
+            error: function (err) {
+                console.log(err.toString());
+                alert(data.result);
+            }
 
-            })
-        });
-    </script>
+        })
+    });
+</script>
 </body>
 </html>

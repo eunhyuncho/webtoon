@@ -19,9 +19,9 @@ public class PicktoonSecurityUser extends User {
         super(username, password, authorities);
     }
 
-        public String getEmail(){
-            return super.getUsername();
-        }
+    public String getEmail(){
+        return super.getUsername();
     }
+}
 
 

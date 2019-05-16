@@ -1,12 +1,15 @@
 package com.project.picktoon.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -60,4 +63,17 @@ public class WebConfig implements WebMvcConfigurer {
         return templateEngine;
     }
 
+    // ConnectTimeout - 10초 , ReadTimeout - 10초
+    // RestTemplate은 thread-safe한 객체!
+    @Bean
+    public RestTemplate restTemplate(){
+        HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+        factory.setConnectTimeout(10*1000);
+        factory.setReadTimeout(10*1000);
+        RestTemplate restTemplate = new RestTemplate(factory);
+        return restTemplate;
+    }
+
+    @Bean
+    public ObjectMapper objectMapper(){ return new ObjectMapper(); }
 }

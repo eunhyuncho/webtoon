@@ -15,25 +15,34 @@ import java.net.URL;
 
 @Configuration
 public class WebDriverConfig {
-    @Bean
-    public ChromeDriverService chromeDriverService(){
-        String classpathRelativeLocation = "driver/chromedriver";
-        URL url = this.getClass().getClassLoader().getResource(classpathRelativeLocation);
-        File file = new File(url.getFile());
-        ChromeDriverService.Builder bldr = (new ChromeDriverService.Builder())
-                .usingDriverExecutable(file)
-                .usingAnyFreePort();
-        return bldr.build();
-    }
+//    @Bean
+//    public ChromeDriverService chromeDriverService(){
+//        String classpathRelativeLocation = "driver/chromedriver";
+//        URL url = this.getClass().getClassLoader().getResource(classpathRelativeLocation);
+//        File file = new File(url.getFile());
+//        ChromeDriverService.Builder bldr = (new ChromeDriverService.Builder())
+//                .usingDriverExecutable(file)
+//                .usingAnyFreePort();
+//        return bldr.build();
+//    }
 
     @Bean
     @Scope("prototype")
-    public WebDriver webDriver(ChromeDriverService chromeDriverService){
+    public WebDriver webDriver(){
+//        System.setProperty("webdriver.chrome.driver",
+//                "/Users/jungmisu/driver/chromedriver");
+        System.setProperty("webdriver.chrome.driver",
+                "/home/ubuntu/driver/chromedriver");
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("headless");
+//        options.setBinary("/usr/bin/google-chrome-stable");
+        options.addArguments("--headless");
+        options.addArguments("--disable-gpu");
         options.addArguments("window-size=1920x1080");
         options.addArguments("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36");
-        return new ChromeDriver(chromeDriverService, options);
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        //return new ChromeDriver(chromeDriverService, options);
+        return new ChromeDriver(options);
     }
 
 //    @Bean(name = "poolTargetSourceWebDriver", initMethod = "initializeObjects")

@@ -1,4 +1,4 @@
-package com.project.picktoon.dto.DaumWebtoonDto;
+package com.project.picktoon.dto.daumWebtoonDto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

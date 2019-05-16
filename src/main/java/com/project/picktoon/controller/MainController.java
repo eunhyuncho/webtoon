@@ -19,6 +19,6 @@ public class MainController {
         return "index";
     }
 
-//    @GetMapping("/addwebtoon")
-//    public String addwebtoon() {  return "addwebtoon"; }
+    @GetMapping("/addwebtoon")
+    public String addwebtoon() {  return "addwebtoon"; }
 }

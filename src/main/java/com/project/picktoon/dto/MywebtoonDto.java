@@ -32,4 +32,6 @@ public class MywebtoonDto {
     @NotNull
     @Size(min=1, max=45)
     private String webtoonTotalCount;
+    @NotNull
+    private Boolean webtoonUpdateState;
 }

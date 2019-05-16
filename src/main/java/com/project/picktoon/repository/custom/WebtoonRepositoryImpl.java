@@ -55,7 +55,7 @@ public class WebtoonRepositoryImpl extends QuerydslRepositorySupport implements 
 
         // 키워드가 없는 경우 모든 웹툰에서 조회해 리턴한다.
         if(keywords.isEmpty()){
-           // return jpqlQuery.offset(start).limit(limit).distinct().fetch();
+            // return jpqlQuery.offset(start).limit(limit).distinct().fetch();
             return jpqlQuery.distinct();
         }
 

@@ -23,8 +23,8 @@ public class AdminControllerTest {
     @Test
     public void 웹툰_이미지_저장_다음(){
 
-       // WebtoonImage webtoonImage = adminController.saveFileFromUrl("http://t1.daumcdn.net/webtoon/op/3a34d4bed55da90bc97236f06cf900cf286d4199", "one", PlatformType.Daum.toString());
-       // System.out.println("file name : " + webtoonImage.getSaveFileName());
+        //WebtoonImage webtoonImage = adminController.saveFileFromUrl("http://t1.daumcdn.net/webtoon/op/3a34d4bed55da90bc97236f06cf900cf286d4199", "one", PlatformType.Daum.toString());
+        //System.out.println("file name : " + webtoonImage.getSaveFileName());
     }
 
 
