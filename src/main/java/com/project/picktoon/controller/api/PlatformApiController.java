@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/platforms")
@@ -22,6 +24,15 @@ public class PlatformApiController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         return new ResponseEntity<>(platform, HttpStatus.OK);
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<Platform>> getAllPlatform(){
+        List<Platform> platforms = platformService.getAllPlatforms();
+        if(platforms == null)
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        return new ResponseEntity<>(platforms, HttpStatus.OK);
     }
 //
 //    @PostMapping

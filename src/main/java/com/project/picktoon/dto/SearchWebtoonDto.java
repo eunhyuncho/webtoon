@@ -15,6 +15,7 @@ public class SearchWebtoonDto {
     private String seeAge;
     private List<WebtoonImageDto> webtoonImages;
     private List<KeywordDto> keywords;
+    private String platformName;
 
     private Boolean updateState;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")

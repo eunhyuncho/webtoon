@@ -3,8 +3,8 @@ package com.project.picktoon.controller.api;
 import com.project.picktoon.domain.Keyword;
 import com.project.picktoon.domain.Webtoon;
 import com.project.picktoon.domain.WebtoonImage;
-import com.project.picktoon.dto.daumWebtoonDto.DaumWebtoonInfo;
-import com.project.picktoon.dto.daumWebtoonDto.DaumWebtoonList;
+import com.project.picktoon.dto.DaumWebtoonDto.DaumWebtoonInfo;
+import com.project.picktoon.dto.DaumWebtoonDto.DaumWebtoonList;
 import com.project.picktoon.dto.LoadWebtoonData;
 import com.project.picktoon.dto.LoadWebtoonLink;
 import com.project.picktoon.dto.Result;
@@ -12,7 +12,6 @@ import com.project.picktoon.service.KeywordService;
 import com.project.picktoon.service.PlatformService;
 import com.project.picktoon.service.WebtoonService;
 import com.project.picktoon.util.KeywordType;
-import com.project.picktoon.util.ParseData;
 import com.project.picktoon.util.PlatformType;
 import com.project.picktoon.util.SeeAge;
 import lombok.RequiredArgsConstructor;
@@ -30,9 +29,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -124,12 +128,12 @@ public class AdminApiControllor {
             String updatedDateStr = webtoonInfo.getUpdatedDate();
             updatedDateStr = updatedDateStr.substring(0 , 8);
             log.info("최신 업데이트 날짜 : "+updatedDateStr);
-            Date updatedDate = ParseData.parseDate(updatedDateStr,new SimpleDateFormat("yyyyMMdd") );
+            Date updatedDate = parseDate(updatedDateStr);
             webtoon.setUpdatedDate(updatedDate);
 
             webtoon.setTotalCount(webtoonInfo.getCount());
             // 플랫폼
-            webtoon.setPlatform(platformService.getPlatformByPlatformName(PlatformType.Daum));
+            webtoon.setPlatform(platformService.getPlatformByPlatformName(PlatformType.Daum.toString()));
 
             // 작가 추가.
             Keyword existAuthor = keywordService.getAuthorByName(webtoonInfo.getAuthor1());
@@ -151,7 +155,7 @@ public class AdminApiControllor {
                 }
             }
             // 링크 추가 ( 링크형식 : http://webtoon.daum.net/webtoon/view/goodbyeinlaw)
-            webtoon.setLink("http://m.webtoon.daum.net/m/webtoon/view/"+webtoonInfo.getNickname());
+            webtoon.setLink("http://webtoon.daum.net/webtoon/view/"+webtoonInfo.getNickname());
             // 크롤링 링크 추가 (링크 형식 : http://webtoon.daum.net/data/pc/webtoon/view/goodbyeinlaw )
             webtoon.setCrawlingLink("http://webtoon.daum.net/data/pc/webtoon/view/"+webtoonInfo.getNickname());
 
@@ -188,7 +192,7 @@ public class AdminApiControllor {
             }
             webtoon.setKeywords(keywords);
             // 이미지 저장 및 웹툰에 추가.
-            webtoon.addWebtoonImage(new WebtoonImage(webtoonInfo.getPcThumbnailImageUrl(), webtoonInfo.getTitle(),PlatformType.Daum.toString()));
+            webtoon.addWebtoonImage(saveFileFromUrl(webtoonInfo.getPcThumbnailImageUrl(), webtoonInfo.getTitle(),PlatformType.Daum.toString()));
             // 웹툰 저장
             webtoonService.addWebtoon(webtoon);
             addWebtoonCount++;
@@ -202,22 +206,17 @@ public class AdminApiControllor {
 
         driver.get(loadWebtoonLink.getLink());
         LoadWebtoonData loadWebtoonData = new LoadWebtoonData();
-        String title = driver.findElement(By.className("comicInfo__title")).getText(); //제목
-        List<WebElement> authors = driver.findElement(By.className("comicInfo__artist")).findElements(By.tagName("a")); // 작가
-        List<WebElement> genreElements = driver.findElements(By.className("comicInfo__tag"));  // 장르
-        List<String> genres = new ArrayList<>();
-        String description = driver.findElement(By.className("comicInfo__synopsis")).getText();  // 설명
-        // String imageUrl = driver.findElement(By.className("thumbnail")).getAttribute("src");    // 이미지 url
-        String imageUrl = driver.findElement(By.className("comicCover__img")).getAttribute("src");    // 이미지 url
+        String title = driver.findElement(By.className("title")).getText(); //제목
+        List<WebElement> authors = driver.findElement(By.className("artist")).findElements(By.tagName("a")); // 작가
+        String[] genres = driver.findElement(By.className("genre")).getText().substring(4).split("/");  // 장르
+        String description = driver.findElement(By.id("product-synopsis")).getText().substring(3);  // 설명
+        String imageUrl = driver.findElement(By.className("thumbnail")).getAttribute("src");    // 이미지 url
 
         // 제목
         loadWebtoonData.setTitle(title);
         // 작가
         for(WebElement a : authors)
             loadWebtoonData.addAuthor(a.getText());
-        //장르
-        for(WebElement g : genreElements)
-            genres.add(g.getText());
         // 장르 -- 아이디들을 넘겨준다.
         for(String g : genres){
             Keyword existGenre = keywordService.getKeywordByTypeAndValue(KeywordType.KEYWORD_GENRE , g);
@@ -231,7 +230,7 @@ public class AdminApiControllor {
         // 설명
         loadWebtoonData.setDescription(description);
         // 이미지 주소
-        imageUrl = imageUrl.replaceAll("width=20", "width=500");
+        imageUrl = imageUrl.replaceAll("width=100", "width=200");
         loadWebtoonData.setImgUrl(imageUrl);
         log.info("imageUrl : "+imageUrl);
 
@@ -272,15 +271,15 @@ public class AdminApiControllor {
     }
 
 
-//    public Date parseDate(String dateStr){
-//        try{
-//            Date date = new SimpleDateFormat("yyyyMMdd").parse(dateStr);
-//            return date;
-//        }catch (Exception ex){
-//            ex.printStackTrace();
-//        }
-//        return null;
-//    }
+    public Date parseDate(String dateStr){
+        try{
+            Date date = new SimpleDateFormat("yyyyMMdd").parse(dateStr);
+            return date;
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return null;
+    }
 
     public Long parseWeekday(String weekdayStr){
         Long id = -1L;
@@ -312,4 +311,34 @@ public class AdminApiControllor {
         return id;
     }
 
+    // 크롤링한 이미지 저장.
+    private WebtoonImage saveFileFromUrl(String url, String title, String platform){
+        String dir = "imagefile/webtoon/";
+        WebtoonImage webtoonImage = new WebtoonImage();
+        Calendar calendar = Calendar.getInstance();
+        dir = dir + calendar.get(Calendar.YEAR);
+        dir = dir + "/";
+        dir = dir + (calendar.get(Calendar.MONTH) + 1);
+        dir = dir + "/";
+        dir = dir + calendar.get(Calendar.DAY_OF_MONTH);
+        dir = dir + "/";
+        dir = dir + platform + "/"; // 플랫폼 디렉토리..
+        File dirFile = new File(dir);
+        dirFile.mkdirs(); // 디렉토리가 없을 경우 만든다. 퍼미션이 없으면 생성안될 수 있다.
+        dir = dir + title;
+        try{
+            URL imgUrl = new URL(url);
+            BufferedImage jpg = ImageIO.read(imgUrl);
+            File file = new File(dir+".jpg");
+            ImageIO.write(jpg, "jpg", file);
+            System.out.println("file length : "+file.length());
+
+            webtoonImage.setSaveFileName(dir+".jpg");
+            webtoonImage.setLength(file.length());
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return webtoonImage;
+    }
 }

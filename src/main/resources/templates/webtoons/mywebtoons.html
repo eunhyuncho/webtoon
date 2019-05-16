@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layout/default">
+      layout:decorator="/layout/default">
 <head>
     <th:block layout:fragment="css">
         <link href="/css/search-list.css" rel = "stylesheet">
@@ -52,6 +52,7 @@
                     '</div>'+
                     '<img src="/icon/'+alarmcheck(resp[i].alarm)+'" alt="알람" class="alarm">'+
                     '</li>');
+
                 webtoonRow.appendTo($('#result-list'));
                 mywebtoonsIds.push(resp[i].id);
             }

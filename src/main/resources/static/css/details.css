@@ -149,3 +149,6 @@ section[id="details-buttons"]{
 .btn-read{
     margin-right: 3px;
 }
+.badge-search{
+    border: none;
+}

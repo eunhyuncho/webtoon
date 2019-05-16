@@ -14,6 +14,8 @@
                 <a sec:authorize="isAnonymous()" href="/users/join">회원가입</a>
 
                 <a sec:authorize="isAuthenticated()" class="menu-text"><span th:text="${#authentication.principal.nickName}"></span>님 환영합니다.</a>
+                <a sec:authorize="hasRole('ROLE_ADMIN')" href="/admin/search">관리자 웹툰찾기</a>
+                <a sec:authorize="hasRole('ROLE_ADMIN')" href="/admin/newWebtoon">관리자 신작관리</a>
                 <a sec:authorize="isAuthenticated()" href="/webtoons/mywebtoons">마이 웹툰</a>
                 <a sec:authorize="isAuthenticated()" href="/webtoons/searchform">웹툰 찾기</a>
                 <a sec:authorize="isAuthenticated()" href="/logout">로그아웃</a>

@@ -18,5 +18,5 @@ public class NewWebtoonDto {
     @Size(min=1, max=45)
     private String webtoonTitle;
     @NotNull
-    private Long webtoonImageId;
+    private Long webtoonImageId = -1L;
 }

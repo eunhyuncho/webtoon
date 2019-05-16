@@ -26,6 +26,10 @@ public class WebtoonServiceImpl implements WebtoonService {
         return webtoonRepository.getWebtoons(keywords, searchStr, start, limit);
     }
 
+    @Override
+    public Webtoon getWebtoonByTitle(String title) {
+        return webtoonRepository.getWebtoonByTitle(title);
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -72,7 +76,7 @@ public class WebtoonServiceImpl implements WebtoonService {
 
     @Override
     @Transactional(readOnly = true)
-    public Webtoon getWebtoonByTitleAndPlatform(String title, PlatformType platform) {
+    public Webtoon getWebtoonByTitleAndPlatform(String title, PlatformType  platform) {
         return webtoonRepository.getWebtoonByTitleAndAndPlatform(title, platform);
     }
 
@@ -88,5 +92,10 @@ public class WebtoonServiceImpl implements WebtoonService {
         List<Webtoon> webtoons = webtoonRepository.getWebtoonsByKeyword(keywordId);
         for(Webtoon w : webtoons)
             webtoonRepository.updateWebtoonUpdateState(w.getId());
+    }
+
+    @Override
+    public List<Webtoon> getWebtoonsByPlatfrom(int platformId) {
+        return webtoonRepository.getWebtoonsByPlatform(platformId);
     }
 }
