@@ -3,8 +3,8 @@ package com.project.picktoon.controller.api;
 import com.project.picktoon.domain.Keyword;
 import com.project.picktoon.domain.Webtoon;
 import com.project.picktoon.domain.WebtoonImage;
-import com.project.picktoon.dto.DaumWebtoonDto.DaumWebtoonInfo;
-import com.project.picktoon.dto.DaumWebtoonDto.DaumWebtoonList;
+import com.project.picktoon.dto.daumWebtoonDto.DaumWebtoonInfo;
+import com.project.picktoon.dto.daumWebtoonDto.DaumWebtoonList;
 import com.project.picktoon.dto.LoadWebtoonData;
 import com.project.picktoon.dto.LoadWebtoonLink;
 import com.project.picktoon.dto.Result;
@@ -133,7 +133,7 @@ public class AdminApiControllor {
 
             webtoon.setTotalCount(webtoonInfo.getCount());
             // 플랫폼
-            webtoon.setPlatform(platformService.getPlatformByPlatformName(PlatformType.Daum.toString()));
+            webtoon.setPlatform(platformService.getPlatformByPlatformName(PlatformType.Daum));
 
             // 작가 추가.
             Keyword existAuthor = keywordService.getAuthorByName(webtoonInfo.getAuthor1());
