@@ -29,10 +29,10 @@ public class WebDriverConfig {
     @Bean
     @Scope("prototype")
     public WebDriver webDriver(){
-        System.setProperty("webdriver.chrome.driver",
-                "/Users/cho-eunhyun/driver/chromedriver");
 //        System.setProperty("webdriver.chrome.driver",
-//                "/home/ubuntu/driver/chromedriver");
+//                "/Users/cho-eunhyun/driver/chromedriver");
+        System.setProperty("webdriver.chrome.driver",
+                "/home/ubuntu/driver/chromedriver");
         ChromeOptions options = new ChromeOptions();
 //        options.setBinary("/usr/bin/google-chrome-stable");
         options.addArguments("--headless");
