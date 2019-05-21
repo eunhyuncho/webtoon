@@ -26,3 +26,7 @@
 - AWS
 
 - Crawling
+
+---
+* git merge error, AWS error 
+  프로젝트 저장소 : https://github.com/misudev/picktoon 
